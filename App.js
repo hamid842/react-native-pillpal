@@ -5,7 +5,7 @@ import AnimatedLoader from 'react-native-animated-loader';
 
 import navigationTheme from './app/navigation/navigationTheme';
 import OfflineNotice from './app/components/OfflineNotice';
-// import AuthNavigator from './app/navigation/AuthNavigator';
+import AuthNavigator from './app/navigation/AuthNavigator';
 import AppNavigator from './app/navigation/AppNavigator';
 import {navigationRef} from './app/navigation/rootNavigation';
 import authStorage from './app/auth/storage';
@@ -44,8 +44,8 @@ const App = () => {
       <OfflineNotice />
       <StatusBar style="auto" />
       <NavigationContainer ref={navigationRef} theme={navigationTheme}>
-        <AppNavigator />
-        {/* {user ? <AppNavigator /> : <AuthNavigator />} */}
+        {/* <AppNavigator /> */}
+        {user ? <AppNavigator /> : <AuthNavigator />}
       </NavigationContainer>
     </AuthContext.Provider>
   );
