@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StatusBar, StyleSheet, View, Text} from 'react-native';
+import {StatusBar, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import AnimatedLoader from 'react-native-animated-loader';
 

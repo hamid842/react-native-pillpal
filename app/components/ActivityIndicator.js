@@ -2,7 +2,7 @@ import React, {memo} from 'react';
 import LottieView from 'lottie-react-native';
 import {View, StyleSheet} from 'react-native';
 
-function ActivityIndicator({visible = false}) {
+const ActivityIndicator = ({visible = false}) =>{
   if (!visible) return null;
 
   return (

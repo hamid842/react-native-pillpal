@@ -1,17 +1,17 @@
 import React from 'react';
 import {ImageBackground, StyleSheet, View, Image, Text} from 'react-native';
 
-import Button from '../components/Button';
-import routes from '../navigation/routes';
+import Button from '../../components/Button';
+import routes from '../../navigation/routes';
 
-function WelcomeScreen({navigation}) {
+const WelcomeScreen = ({navigation})=> {
   return (
     <ImageBackground
       blurRadius={10}
       style={styles.background}
-      source={require('../assets/background.jpg')}>
+      source={require('../../assets/background.jpg')}>
       <View style={styles.logoContainer}>
-        <Image style={styles.logo} source={require('../assets/logo.png')} />
+        <Image style={styles.logo} source={require('../../assets/logo.png')} />
         <Text style={styles.tagline}>An Application for Medication</Text>
       </View>
       <View style={styles.buttonsContainer}>

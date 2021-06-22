@@ -2,13 +2,13 @@ import React, {useState} from 'react';
 import {StyleSheet, Image} from 'react-native';
 import * as Yup from 'yup';
 
-import Screen from '../components/Screen';
-import Form from '../components/Form';
-import ErrorMessage from '../components/ErrorMessage';
-import FormField from '../components/FormField';
-import SubmitButton from '../components/SubmitButton';
-import authApi from '../api/auth';
-import useAuth from '../auth/useAuth';
+import Screen from '../../components/Screen';
+import Form from '../../components/Form';
+import ErrorMessage from '../../components/ErrorMessage';
+import FormField from '../../components/FormField';
+import SubmitButton from '../../components/SubmitButton';
+import authApi from '../../api/auth';
+import useAuth from '../../auth/useAuth';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label('Username'),
@@ -17,7 +17,9 @@ const validationSchema = Yup.object().shape({
 
 const LoginScreen = () => {
   const auth = useAuth();
+
   const [loginFailed, setLoginFailed] = useState(false);
+  
   const handleSubmit = async ({username, password}) => {
     const result = await authApi.login(username, password);
     if (!result.ok) return setLoginFailed(true);
@@ -27,7 +29,7 @@ const LoginScreen = () => {
 
   return (
     <Screen style={styles.container}>
-      <Image style={styles.logo} source={require('../assets/logo.png')} />
+      <Image style={styles.logo} source={require('../../assets/logo.png')} />
       <Form
         initialValues={{username: '', password: ''}}
         onSubmit={handleSubmit}

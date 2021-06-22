@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import * as Yup from "yup";
 
-import Screen from "../components/Screen";
-import ErrorMessage from "../components/ErrorMessage";
-import Form from "../components/Form";
-import FormField from "../components/FormField";
-import SubmitButton from "../components/SubmitButton";
+import Screen from "../../components/Screen";
+import ErrorMessage from "../../components/ErrorMessage";
+import Form from "../../components/Form";
+import FormField from "../../components/FormField";
+import SubmitButton from "../../components/SubmitButton";
 
-import ActivityIndicator from "../components/ActivityIndicator";
+import ActivityIndicator from "../../components/ActivityIndicator";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),

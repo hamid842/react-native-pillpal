@@ -1,33 +1,23 @@
-import * as React from 'react';
-import { Button, View } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 
-function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button
-        onPress={() => navigation.navigate('Notifications')}
-        title="Go to notifications"
-      />
-    </View>
-  );
-}
+import React from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
 
-function NotificationsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button onPress={() => navigation.goBack()} title="Go back home" />
-    </View>
-  );
-}
+import LoginScreen from '../screens/login/LoginScreen';
+import RegisterScreen from '../screens/register/RegisterScreen';
+import WelcomeScreen from '../screens/welcome/WelcomeScreen';
 
-const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
-export default function App() {
-  return (
-      <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Notifications" component={NotificationsScreen} />
-      </Drawer.Navigator>
-  );
-}
+const AppNavigator = () => (
+  <Stack.Navigator>
+    <Stack.Screen
+      name="Welcome"
+      component={WelcomeScreen}
+      options={{headerShown: false}}
+    />
+    <Stack.Screen name="Login" component={LoginScreen} />
+    <Stack.Screen name="Register" component={RegisterScreen} />
+  </Stack.Navigator>
+);
+
+export default AppNavigator;
