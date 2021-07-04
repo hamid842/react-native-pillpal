@@ -12,7 +12,7 @@ const initialState = {
   selectedPatientFromTopMenu: {},
 };
 
-const getLoggedInAccountInfo = async id => {
+const getAccountPatients = async id => {
   const {data} = await patients.getAccountPatients(id);
   return data;
 };
@@ -21,7 +21,7 @@ const getLoggedInAccountInfo = async id => {
 export const getAllPatients = id => async dispatch => {
   dispatch({
     type: GET_PATIENTS,
-    payload: await getLoggedInAccountInfo(id),
+    payload: await getAccountPatients(id),
   });
 };
 

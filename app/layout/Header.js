@@ -1,16 +1,8 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  Button,
-} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import UserInfoMenu from './UserInfoMenu';
-import routes from '../navigation/routes';
 
 const Header = props => {
   const {navigation, title, account} = props;
@@ -30,7 +22,7 @@ const Header = props => {
       </View>
       <View style={styles.rightButton}>
         <TouchableOpacity>
-          <UserInfoMenu />
+          <UserInfoMenu navigation={navigation} />
         </TouchableOpacity>
       </View>
     </View>

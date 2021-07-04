@@ -1,8 +1,7 @@
-import * as React from 'react';
-import {View} from 'react-native';
+import React from 'react';
 import {List, Avatar} from 'react-native-paper';
 
-const PatientListItem = ({patient}) => {
+const PatientListItem = ({patient, onPress}) => {
   const [expanded, setExpanded] = React.useState(true);
 
   const handlePress = () => setExpanded(!expanded);
@@ -18,6 +17,7 @@ const PatientListItem = ({patient}) => {
           source={require('../assets/hamid.png')}
         />
       )}
+      onPress={onPress}
     />
   );
 };

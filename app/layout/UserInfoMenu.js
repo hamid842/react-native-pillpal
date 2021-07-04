@@ -4,39 +4,36 @@ import {
   StyleSheet,
   Image,
   View,
-  Modal,
   Text,
-  Button,
+  Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native';
 import {List} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Screen from '../components/Screen';
 import colors from '../config/colors';
-import auth from '../auth/useAuth';
 import {
   getAllPatients,
   selectPatientFromTopMenu,
 } from '../redux/reducers/patients/patients-resucer';
 import PatientListItem from './PatientListItem';
 import useAuth from '../auth/useAuth';
+import NoPatient from './NoPatient';
 
 const UserInfoMenu = props => {
   const auth = useAuth();
-  const {account, selectedPatientFromTopMenu, patients} = props;
+  const {account, patients, navigation} = props;
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     props.getAllPatients(account?.id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.id]);
 
-  // const handleSelectPatient = id => {
-  //   props.selectPatientFromTopMenu(id);
-  // };
-  console.log('Patient', patients);
+  const handleSelectPatient = id => {
+    props.selectPatientFromTopMenu(id);
+    setModalVisible(false);
+  };
 
   return (
     <>
@@ -61,10 +58,17 @@ const UserInfoMenu = props => {
                 title="Patients"
                 left={props => <List.Icon {...props} icon="account-group" />}>
                 <List.Section title="">
-                  {patients.length > 0 &&
+                  {patients.length > 0 ? (
                     patients.map((patient, i) => (
-                      <PatientListItem key={i} patient={patient} />
-                    ))}
+                      <PatientListItem
+                        key={i}
+                        patient={patient}
+                        onPress={() => handleSelectPatient(patient.id)}
+                      />
+                    ))
+                  ) : (
+                    <NoPatient navigation={navigation} />
+                  )}
                 </List.Section>
               </List.Accordion>
               <List.Item
@@ -114,7 +118,6 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = ({login, patients}) => ({
   patients: patients.patients,
-  selectedPatientFromTopMenu: patients.selectedPatientFromTopMenu,
   account: login.account,
 });
 
