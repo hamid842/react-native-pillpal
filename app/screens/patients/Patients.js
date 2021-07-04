@@ -1,14 +1,17 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 
-const Patients = () => {
-    return (
-        <View>
-            <Text>Hello from patients</Text>
-        </View>
-    )
-}
+import Header from '../../layout/Header';
 
-export default Patients
+const Patients = ({navigation}) => {
+  return (
+    <View>
+      <Header navigation={navigation} title={'Patients'} />
+      <Text>Hello from patients</Text>
+    </View>
+  );
+};
 
-const styles = StyleSheet.create({})
+export default Patients;
+
+const styles = StyleSheet.create({});

@@ -2,7 +2,7 @@ import React, {memo} from 'react';
 import LottieView from 'lottie-react-native';
 import {View, StyleSheet} from 'react-native';
 
-const ActivityIndicator = ({visible = false}) =>{
+const ActivityIndicator = ({visible = false}) => {
   if (!visible) return null;
 
   return (
@@ -14,10 +14,11 @@ const ActivityIndicator = ({visible = false}) =>{
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   overlay: {
+    width: '100%',
     position: 'absolute',
     backgroundColor: 'white',
     height: '100%',

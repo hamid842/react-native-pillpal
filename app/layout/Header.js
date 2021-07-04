@@ -1,77 +1,52 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Button,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Header = ({
-  navigation,
-  LeftButton,
-  RightButton,
-  Title,
-  isAtRoot,
-}) => {
+import UserInfoMenu from './UserInfoMenu';
+import routes from '../navigation/routes';
+
+const Header = props => {
+  const {navigation, title, account} = props;
   return (
     <View style={styles.header}>
       <View style={styles.leftButton}>
-        {LeftButton ? (
-          <LeftButton />
-        ) : (
-          <TouchableOpacity
-            style={{marginLeft: 10}}
-            onPress={() => {
-              if (!navigation.canGoBack() || isAtRoot) navigation.openDrawer();
-              else navigation.goBack();
-            }}>
-            <Icon
-              name={
-                !navigation.canGoBack() || isAtRoot
-                  ? 'ios-menu'
-                  : 'ios-arrow-back'
-              }
-              size={30}
-              color={'gray'}
-            />
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          style={{marginLeft: 10}}
+          onPress={() => {
+            navigation.openDrawer();
+          }}>
+          <Icon name="menu" size={30} color={'black'} />
+        </TouchableOpacity>
       </View>
       <View style={styles.title}>
-        {Title && typeof Title === 'string' ? (
-          <Text style={styles.titleText}>{Title}</Text>
-        ) : (
-          <Title />
-        )}
+        <Text style={styles.titleText}>{title}</Text>
       </View>
-      <View style={styles.rightButton}>{RightButton && <RightButton />}</View>
+      <View style={styles.rightButton}>
+        <TouchableOpacity>
+          <UserInfoMenu />
+        </TouchableOpacity>
+      </View>
     </View>
   );
-};
-
-Header.propTypes = {
-  navigation: PropTypes.object,
-  Title: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  LeftButton: PropTypes.object,
-  RightButton: PropTypes.object,
-  isAtRoot: PropTypes.bool,
-};
-
-Header.defaultProps = {
-  Title: '',
-  LeftButton: null,
-  RightButton: null,
-  isAtRoot: false,
 };
 
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-  },
-  leftButton: {
-    flex: 1,
-    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+    backgroundColor: 'dodgerblue',
   },
   title: {
-    flex: 5,
-    justifyContent: 'center',
+    flex: 4,
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   titleText: {
@@ -83,6 +58,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  image: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+  },
 });
 
-export default Header
+export default Header;

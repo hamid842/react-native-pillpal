@@ -5,7 +5,7 @@ import authStorage from '../auth/storage';
 // import settings from "../config/settings";
 
 const apiClient = create({
-  baseURL: 'http://192.168.1.5:8080/api',
+  baseURL: 'http://192.168.1.7:8080/api',
 });
 
 apiClient.addAsyncRequestTransform(async request => {
@@ -13,7 +13,7 @@ apiClient.addAsyncRequestTransform(async request => {
   if (!authToken) {
     return;
   } else if (request) {
-    request.headers['x-auth-token'] = authToken;
+    request.headers['Authorization'] = `Bearer ${authToken}`;
   }
 });
 

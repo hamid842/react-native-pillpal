@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {connect} from 'react-redux';
 import {StyleSheet, Image} from 'react-native';
 import * as Yup from 'yup';
 
@@ -7,37 +8,32 @@ import Form from '../../components/Form';
 import ErrorMessage from '../../components/ErrorMessage';
 import FormField from '../../components/FormField';
 import SubmitButton from '../../components/SubmitButton';
-import authApi from '../../api/auth';
+import ActivityIndicator from '../../components/ActivityIndicator';
 import useAuth from '../../auth/useAuth';
+import {login} from '../../redux/reducers/login/login-reducer';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label('Username'),
   password: Yup.string().required().label('Password'),
 });
 
-const LoginScreen = () => {
+const LoginScreen = props => {
+  const {errorMessage, loading} = props;
   const auth = useAuth();
 
-  const [loginFailed, setLoginFailed] = useState(false);
-  
   const handleSubmit = async ({username, password}) => {
-    const result = await authApi.login(username, password);
-    if (!result.ok) return setLoginFailed(true);
-    setLoginFailed(false);
-    auth.logIn(result.data.id_token);
+    props.login(username, password, auth);
   };
 
   return (
     <Screen style={styles.container}>
+      <ActivityIndicator visible={loading} />
       <Image style={styles.logo} source={require('../../assets/logo.png')} />
       <Form
         initialValues={{username: '', password: ''}}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}>
-        <ErrorMessage
-          error="Invalid email and/or password."
-          visible={loginFailed}
-        />
+        <ErrorMessage error={errorMessage} visible={errorMessage} />
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -74,4 +70,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+const mapStateToProps = ({login}) => ({
+  errorMessage: login.errorMessage,
+  loading: login.loading,
+});
+
+export default connect(mapStateToProps, {login})(LoginScreen);

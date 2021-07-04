@@ -1,14 +1,17 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 
-const AddNewPrescription = () => {
-    return (
-        <View>
-            <Text>Hello from add new</Text>
-        </View>
-    )
-}
+import Header from '../../layout/Header';
 
-export default AddNewPrescription
+const AddNewPrescription = ({navigation}) => {
+  return (
+    <View>
+      <Header navigation={navigation} title={'Add New Prescription'} />
+      <Text>Hello from add new</Text>
+    </View>
+  );
+};
 
-const styles = StyleSheet.create({})
+export default AddNewPrescription;
+
+const styles = StyleSheet.create({});

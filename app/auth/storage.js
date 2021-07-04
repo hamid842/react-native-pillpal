@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import jwtDecode from 'jwt-decode';
 
 const key = 'authToken';

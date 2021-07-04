@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {Provider as StateProvider} from 'react-redux';
 import {StatusBar, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import AnimatedLoader from 'react-native-animated-loader';
@@ -10,6 +11,7 @@ import AppNavigator from './app/navigation/AppNavigator';
 import {navigationRef} from './app/navigation/rootNavigation';
 import authStorage from './app/auth/storage';
 import AuthContext from './app/auth/context';
+import store from './app/config/store';
 
 const App = () => {
   const [user, setUser] = useState();
@@ -40,14 +42,16 @@ const App = () => {
     );
   }
   return (
-    <AuthContext.Provider value={{user, setUser}}>
-      <OfflineNotice />
-      <StatusBar style="auto" />
-      <NavigationContainer ref={navigationRef} theme={navigationTheme}>
-        {/* <AppNavigator /> */}
-        {user ? <AppNavigator /> : <AuthNavigator />}
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <StateProvider store={store}>
+      <AuthContext.Provider value={{user, setUser}}>
+        <OfflineNotice />
+        <StatusBar style="auto" />
+        <NavigationContainer ref={navigationRef} theme={navigationTheme}>
+          {/* <AppNavigator /> */}
+          {user ? <AppNavigator /> : <AuthNavigator />}
+        </NavigationContainer>
+      </AuthContext.Provider>
+    </StateProvider>
   );
 };
 

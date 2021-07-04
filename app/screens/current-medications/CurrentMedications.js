@@ -1,14 +1,19 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from 'react';
+import {StyleSheet, Text} from 'react-native';
 
-const CurrentMedications = () => {
-    return (
-        <View>
-            <Text>Hello from Currenr Medication</Text>
-        </View>
-    )
-}
+import Screen from '../../components/Screen';
+import Header from '../../layout/Header';
 
-export default CurrentMedications
+const CurrentMedications = ({navigation}) => {
+  return (
+    <Screen>
+      <Header navigation={navigation} title={'Current Medics'} />
 
-const styles = StyleSheet.create({})
+      <Text>Hello from Currenr Medication</Text>
+    </Screen>
+  );
+};
+
+export default CurrentMedications;
+
+const styles = StyleSheet.create({});

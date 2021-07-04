@@ -1,14 +1,17 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 
-const Profile = () => {
-    return (
-        <View>
-            <Text>Hello from profile</Text>
-        </View>
-    )
-}
+import Header from '../../layout/Header';
 
-export default Profile
+const Profile = ({navigation}) => {
+  return (
+    <View>
+      <Header navigation={navigation} title={'Profile'} />
+      <Text>Hello from profile</Text>
+    </View>
+  );
+};
 
-const styles = StyleSheet.create({})
+export default Profile;
+
+const styles = StyleSheet.create({});
