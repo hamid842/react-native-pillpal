@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../../config/colors';
 
 const Actions = props => {
+  const {setEditMode} = props;
   const [showActions, setShowActions] = useState(false);
   return (
     <View {...props}>
@@ -15,7 +16,12 @@ const Actions = props => {
         />
       ) : (
         <View style={styles.container}>
-          <Icon name="file-edit-outline" size={25} color={colors.mainBlue} />
+          <Icon
+            name="file-edit-outline"
+            size={25}
+            color={colors.mainBlue}
+            onPress={() => setEditMode(true)}
+          />
           <Icon
             name="delete-outline"
             size={30}

@@ -7,7 +7,7 @@ import Actions from './Actions';
 import colors from '../../config/colors';
 import GeneralInfo from './GeneralInfo';
 
-const PatientItem = ({patient}) => {
+const PatientItem = ({patient, setEditMode}) => {
   return (
     <Card style={styles.card}>
       <Card.Title
@@ -16,7 +16,7 @@ const PatientItem = ({patient}) => {
         left={props => (
           <Avatar.Image {...props} source={require('../../assets/hamid.png')} />
         )}
-        right={props => <Actions {...props} />}
+        right={props => <Actions {...props} setEditMode={setEditMode} />}
       />
       <Card.Content>
         <GeneralInfo patient={patient} />

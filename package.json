@@ -27,6 +27,7 @@
     "react-native": "0.64.2",
     "react-native-animated-loader": "0.0.9",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-material-dropdown": "git+https://github.com/noway/react-native-material-dropdown.git",
     "react-native-modal-dropdown": "^1.0.1",
     "react-native-paper": "^4.9.2",
     "react-native-reanimated": "^2.2.0",
