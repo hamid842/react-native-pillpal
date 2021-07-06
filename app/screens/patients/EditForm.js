@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {TextInput} from 'react-native-paper';
 import {Dropdown} from 'react-native-material-dropdown';
 
 import Button from '../../components/AppButton';
-import TextInput from '../../components/AppTextInput';
+import AppTextInput from '../../components/AppTextInput';
+import DatePicker from '../../components/DatePicker';
 import colors from '../../config/colors';
 
 const EditForm = ({setAddMode, setEditMode}) => {
@@ -24,25 +26,25 @@ const EditForm = ({setAddMode, setEditMode}) => {
   };
   return (
     <>
-      <TextInput label="First Name" />
-      <TextInput label="Last Name" />
-      <TextInput label="ID No." />
-      <TextInput label="Birth Date" />
-      <TextInput label="Address" />
-      <TextInput label="Email" />
-      <TextInput label="Phone Number" />
-      <TextInput label="Mobile Number" />
-      <TextInput label="Marital Status" />
-      <TextInput label="Age" />
-      <TextInput label="Height" />
-      <TextInput label="Weight" />
+      <AppTextInput label="First Name" />
+      <AppTextInput label="Last Name" />
+      <AppTextInput label="ID No." />
+      <DatePicker />
+      <AppTextInput label="Address" />
+      <AppTextInput label="Email" />
+      <AppTextInput label="Phone Number" />
+      <AppTextInput label="Mobile Number" />
+      <AppTextInput label="Marital Status" />
+      <AppTextInput label="Age" right={<TextInput.Affix text="Years old" />} />
+      <AppTextInput label="Height" right={<TextInput.Affix text="Cm" />} />
+      <AppTextInput label="Weight" right={<TextInput.Affix text="Kg" />} />
       <Dropdown
         label="Blood Type"
         data={bloodTypeOptions}
         containerStyle={styles.dropdown}
         overlayStyle={styles.overlay}
       />
-      <TextInput label="Relationship" />
+      <AppTextInput label="Relationship" />
       <View style={styles.btnContainer}>
         <Button
           label="Cancel"

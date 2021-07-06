@@ -1,18 +1,44 @@
-import React, {memo, useState} from 'react';
+import React, {memo, useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {StyleSheet, ScrollView} from 'react-native';
 
 import Button from '../../components/AppButton';
 import Header from '../../layout/Header';
 import PatientItem from './PatientItem';
-import colors from '../../config/colors';
 import EditForm from './EditForm';
+import patientsApi from '../../api/patients';
+import ActivityIndicator from '../../components/ActivityIndicator';
+import SuccessSnackbar from '../../components/SuccessSnackbar';
+import ErrorSnackbar from '../../components/ErrorSnackbar';
+import NoPatient from './NoPatient';
+import {getAllPatients} from '../../redux/reducers/patients/patients-reducer';
 
-const Patients = ({navigation, patients}) => {
+const Patients = props => {
+  const {navigation, patients, account} = props;
   const [editMode, setEditMode] = useState(false);
   const [addMode, setAddMode] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showSuccessSnackbar, setShowSuccessSnackbar] = useState(false);
+  const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
+
+  useEffect(() => {
+    props.getAllPatients(account?.id);
+  }, [account?.id, patients]);
+
+  const deletePatient = async id => {
+    setLoading(true);
+    const result = await patientsApi.deletePatient(id);
+    if (result.ok) {
+      setLoading(false);
+      setShowSuccessSnackbar(true);
+    } else {
+      setLoading(false);
+      setShowErrorSnackbar(true);
+    }
+  };
   return (
     <>
+      <ActivityIndicator visible={loading} />
       <Header navigation={navigation} title={'Patients'} />
       <Button
         color="dodgerblue"
@@ -29,13 +55,25 @@ const Patients = ({navigation, patients}) => {
             <PatientItem
               key={index}
               patient={patient}
+              onDeletePress={() => deletePatient(patient.id)}
               setEditMode={setEditMode}
             />
           ))}
         {(addMode || editMode) && (
           <EditForm setAddMode={setAddMode} setEditMode={setEditMode} />
         )}
+        {patients.length == 0 && <NoPatient />}
       </ScrollView>
+      <SuccessSnackbar
+        visible={showSuccessSnackbar}
+        message="Patient Deleted Successfully."
+        onDismiss={() => setShowSuccessSnackbar(false)}
+      />
+      <ErrorSnackbar
+        visible={showErrorSnackbar}
+        message="Something went wrong!"
+        onDismiss={() => setShowErrorSnackbar(false)}
+      />
     </>
   );
 };
@@ -52,4 +90,4 @@ const mapStateToProps = ({login, patients}) => ({
   patients: patients.patients,
 });
 
-export default connect(mapStateToProps, {})(memo(Patients));
+export default connect(mapStateToProps, {getAllPatients})(memo(Patients));

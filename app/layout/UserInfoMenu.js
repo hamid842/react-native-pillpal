@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Image,
   View,
-  Text,
   Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
@@ -16,7 +15,7 @@ import colors from '../config/colors';
 import {
   getAllPatients,
   selectPatientFromTopMenu,
-} from '../redux/reducers/patients/patients-resucer';
+} from '../redux/reducers/patients/patients-reducer';
 import PatientListItem from './PatientListItem';
 import useAuth from '../auth/useAuth';
 import NoPatient from './NoPatient';

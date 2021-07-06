@@ -4,7 +4,7 @@ import {TextInput} from 'react-native-paper';
 
 import colors from '../config/colors';
 
-const AppTextInput = ({label, right, left, value, onChange}) => {
+const AppTextInput = ({label, right, left, value, onChange, onFocus}) => {
   return (
     <TextInput
       theme={{colors: {primary: 'dodgerblue'}}}
@@ -17,6 +17,7 @@ const AppTextInput = ({label, right, left, value, onChange}) => {
       value={value}
       onChangeText={onChange}
       outlineColor={'dodgerblue'}
+      onFocus={onFocus}
     />
   );
 };

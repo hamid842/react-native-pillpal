@@ -1,13 +1,14 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet} from 'react-native';
 import {Card, Avatar} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Actions from './Actions';
 import colors from '../../config/colors';
 import GeneralInfo from './GeneralInfo';
 
-const PatientItem = ({patient, setEditMode}) => {
+const PatientItem = props => {
+  const {patient, setEditMode, onDeletePress} = props;
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   return (
     <Card style={styles.card}>
       <Card.Title
@@ -16,7 +17,16 @@ const PatientItem = ({patient, setEditMode}) => {
         left={props => (
           <Avatar.Image {...props} source={require('../../assets/hamid.png')} />
         )}
-        right={props => <Actions {...props} setEditMode={setEditMode} />}
+        right={props => (
+          <Actions
+            {...props}
+            onDeletePress={onDeletePress}
+            patient={patient}
+            setEditMode={setEditMode}
+            openDeleteDialog={openDeleteDialog}
+            setOpenDeleteDialog={setOpenDeleteDialog}
+          />
+        )}
       />
       <Card.Content>
         <GeneralInfo patient={patient} />
