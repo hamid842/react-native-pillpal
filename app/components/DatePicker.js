@@ -1,5 +1,7 @@
 import React from 'react';
 import {DatePickerModal} from 'react-native-paper-dates';
+import dayjs from 'dayjs';
+
 import AppTextInput from './AppTextInput';
 
 const DatePicker = ({value, onChange}) => {
@@ -20,7 +22,11 @@ const DatePicker = ({value, onChange}) => {
 
   return (
     <>
-      <AppTextInput label="Birth Date" onFocus={() => setOpen(true)} />
+      <AppTextInput
+        label="Birth Date"
+        value={dayjs(date).format('YYYY-MM-DD')}
+        onFocus={() => setOpen(true)}
+      />
       <DatePickerModal
         inputFormat="yyyy-MM-dd"
         mode="single"

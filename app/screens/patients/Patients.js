@@ -14,7 +14,7 @@ import NoPatient from './NoPatient';
 import {getAllPatients} from '../../redux/reducers/patients/patients-reducer';
 
 const Patients = props => {
-  const {navigation, patients, account} = props;
+  const {navigation, patients, selectedPatient, account} = props;
   const [editMode, setEditMode] = useState(false);
   const [addMode, setAddMode] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ const Patients = props => {
 
   useEffect(() => {
     props.getAllPatients(account?.id);
-  }, [account?.id, patients]);
+  }, []);
 
   const deletePatient = async id => {
     setLoading(true);
@@ -31,6 +31,7 @@ const Patients = props => {
     if (result.ok) {
       setLoading(false);
       setShowSuccessSnackbar(true);
+      props.getAllPatients(account?.id);
     } else {
       setLoading(false);
       setShowErrorSnackbar(true);
@@ -60,7 +61,13 @@ const Patients = props => {
             />
           ))}
         {(addMode || editMode) && (
-          <EditForm setAddMode={setAddMode} setEditMode={setEditMode} />
+          <EditForm
+            account={account}
+            selectedPatient={selectedPatient}
+            editMode={editMode}
+            setAddMode={setAddMode}
+            setEditMode={setEditMode}
+          />
         )}
         {patients.length == 0 && <NoPatient />}
       </ScrollView>
@@ -88,6 +95,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = ({login, patients}) => ({
   account: login.account,
   patients: patients.patients,
+  selectedPatient: patients.selectedPatient,
 });
 
 export default connect(mapStateToProps, {getAllPatients})(memo(Patients));

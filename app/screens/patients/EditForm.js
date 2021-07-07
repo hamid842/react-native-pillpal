@@ -1,14 +1,48 @@
-import React, {useState} from 'react';
+import React, {memo, useState} from 'react';
+import {connect} from 'react-redux';
 import {StyleSheet, View} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {Dropdown} from 'react-native-material-dropdown';
+import dayjs from 'dayjs';
 
 import Button from '../../components/AppButton';
 import AppTextInput from '../../components/AppTextInput';
 import DatePicker from '../../components/DatePicker';
 import colors from '../../config/colors';
+import patientsApi from '../../api/patients';
+import ActivityIndicator from '../../components/ActivityIndicator';
+import SuccessSnackbar from '../../components/SuccessSnackbar';
+import ErrorSnackbar from '../../components/ErrorSnackbar';
+import {getAllPatients} from '../../redux/reducers/patients/patients-reducer';
 
-const EditForm = ({setAddMode, setEditMode}) => {
+const EditForm = props => {
+  const {editMode, selectedPatient, setAddMode, setEditMode, account} = props;
+  const [loading, setLoading] = useState(false);
+  const [showSuccessSnackbar, setShowSuccessSnackbar] = useState(false);
+  const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
+  const [newPatientInfo, setNewPatientInfo] = useState({
+    id: editMode ? selectedPatient?.id : null,
+    firstName: editMode ? selectedPatient?.firstName : '',
+    lastName: editMode ? selectedPatient?.lastName : '',
+    birthDate: editMode
+      ? dayjs(selectedPatient?.birthDate).format('YYYY-MM-DD')
+      : '',
+    idNo: editMode ? selectedPatient?.idNo : '',
+    address: editMode ? selectedPatient?.address : '',
+    phoneNumber1: editMode ? selectedPatient?.phoneNumber1 : '',
+    phoneNumber2: editMode ? selectedPatient?.phoneNumber2 : '',
+    email: editMode ? selectedPatient?.email : '',
+    height: editMode ? selectedPatient?.height.toString() : '',
+    age: editMode ? selectedPatient?.age.toString() : '',
+    weight: editMode ? selectedPatient?.weight.toString() : '',
+    bloodType: editMode ? selectedPatient?.bloodType : '',
+    maritalStatus: editMode ? selectedPatient?.maritalStatus : '',
+    relationshipWithUser: editMode ? selectedPatient?.relationshipWithUser : '',
+    userInfo: {
+      id: account?.id,
+    },
+  });
+  console.log(newPatientInfo);
   const bloodTypeOptions = [
     {label: 'B+', value: 'B_p'},
     {label: 'A+', value: 'A_p'},
@@ -20,31 +54,143 @@ const EditForm = ({setAddMode, setEditMode}) => {
     {label: 'O-', value: 'O_n'},
   ];
 
+  const maritalStatusOptions = [
+    {label: 'Married', value: 'MARRIED'},
+    {label: 'Single', value: 'SINGLE'},
+  ];
+
   const handlePressCancel = () => {
     setAddMode(false);
     setEditMode(false);
   };
+
+  const handleChange = (text, name) => {
+    setNewPatientInfo({...newPatientInfo, [name]: text});
+  };
+  const handleEditPatient = async () => {
+    setLoading(true);
+    const result = await patientsApi.editPatient(
+      selectedPatient.id,
+      newPatientInfo,
+    );
+    if (result.ok) {
+      setLoading(false);
+      setShowSuccessSnackbar(true);
+      setEditMode(false);
+      props.getAllPatients(account?.id);
+    } else {
+      setLoading(false);
+      setShowErrorSnackbar(true);
+    }
+  };
+  const handleCreatePatient = async () => {
+    setLoading(true);
+    const result = await patientsApi.createPatient(newPatientInfo);
+    if (result.ok) {
+      setLoading(false);
+      setShowSuccessSnackbar(true);
+      setAddMode(false);
+      props.getAllPatients(account?.id);
+    } else {
+      setLoading(false);
+      setShowErrorSnackbar(true);
+    }
+  };
+
   return (
     <>
-      <AppTextInput label="First Name" />
-      <AppTextInput label="Last Name" />
-      <AppTextInput label="ID No." />
-      <DatePicker />
-      <AppTextInput label="Address" />
-      <AppTextInput label="Email" />
-      <AppTextInput label="Phone Number" />
-      <AppTextInput label="Mobile Number" />
-      <AppTextInput label="Marital Status" />
-      <AppTextInput label="Age" right={<TextInput.Affix text="Years old" />} />
-      <AppTextInput label="Height" right={<TextInput.Affix text="Cm" />} />
-      <AppTextInput label="Weight" right={<TextInput.Affix text="Kg" />} />
+      <ActivityIndicator visible={loading} />
+      <AppTextInput
+        label="First Name"
+        value={newPatientInfo.firstName}
+        onChange={text => handleChange(text, 'firstName')}
+      />
+      <AppTextInput
+        label="Last Name"
+        value={newPatientInfo.lastName}
+        onChange={text => handleChange(text, 'lastName')}
+      />
+      <AppTextInput
+        label="ID No."
+        value={newPatientInfo.idNo}
+        onChange={text => handleChange(text, 'idNo')}
+      />
+      {editMode ? (
+        <AppTextInput
+          label="ID No."
+          value={dayjs(newPatientInfo.birthDate).format('YYYY-MM-DD')}
+          onChange={text => handleChange(text, 'birthDate')}
+        />
+      ) : (
+        <DatePicker
+          value={newPatientInfo.birthDate}
+          onChange={date => handleChange(dayjs(date?.date), 'birthDate')}
+        />
+      )}
+      <AppTextInput
+        label="Address"
+        value={newPatientInfo.address}
+        onChange={text => handleChange(text, 'address')}
+      />
+      <AppTextInput
+        label="Email"
+        value={newPatientInfo.email}
+        onChange={text => handleChange(text, 'email')}
+      />
+      <AppTextInput
+        keyboardType="numeric"
+        label="Phone Number"
+        value={newPatientInfo.phoneNumber1}
+        onChange={text => handleChange(text, 'phoneNumber1')}
+      />
+      <AppTextInput
+        keyboardType="numeric"
+        label="Mobile Number"
+        value={newPatientInfo.phoneNumber2}
+        onChange={text => handleChange(text, 'phoneNumber2')}
+      />
+      <Dropdown
+        label="Marital Status"
+        value={newPatientInfo.maritalStatus}
+        data={maritalStatusOptions}
+        containerStyle={styles.dropdown}
+        overlayStyle={styles.overlay}
+        onChangeText={text => handleChange(text, 'maritalStatus')}
+      />
+      <AppTextInput
+        keyboardType="numeric"
+        label="Age"
+        value={newPatientInfo.age}
+        right={<TextInput.Affix text="Years old" />}
+        onChange={text => handleChange(text, 'age')}
+      />
+      <AppTextInput
+        keyboardType="numeric"
+        label="Height"
+        value={newPatientInfo.height}
+        right={<TextInput.Affix text="Cm" />}
+        onChange={text => handleChange(text, 'height')}
+      />
+      <AppTextInput
+        keyboardType="numeric"
+        label="Weight"
+        value={newPatientInfo.weight}
+        right={<TextInput.Affix text="Kg" />}
+        onChange={text => handleChange(text, 'weight')}
+      />
       <Dropdown
         label="Blood Type"
+        value={newPatientInfo.bloodType}
         data={bloodTypeOptions}
         containerStyle={styles.dropdown}
         overlayStyle={styles.overlay}
+        onChangeText={text => handleChange(text, 'bloodType')}
       />
-      <AppTextInput label="Relationship" />
+      <AppTextInput
+        label="Relationship"
+        value={newPatientInfo.relationshipWithUser}
+        onChange={text => handleChange(text, 'relationshipWithUser')}
+      />
       <View style={styles.btnContainer}>
         <Button
           label="Cancel"
@@ -53,13 +199,27 @@ const EditForm = ({setAddMode, setEditMode}) => {
           style={styles.btn}
           onPress={handlePressCancel}
         />
-        <Button label="Save" color="green" icon="check" style={styles.btn} />
+        <Button
+          label="Save"
+          color="green"
+          icon="check"
+          style={styles.btn}
+          onPress={editMode ? handleEditPatient : handleCreatePatient}
+        />
       </View>
+      <SuccessSnackbar
+        visible={showSuccessSnackbar}
+        message="Patient Edited Successfully."
+        onDismiss={() => setShowSuccessSnackbar(false)}
+      />
+      <ErrorSnackbar
+        visible={showErrorSnackbar}
+        message="Something went wrong!"
+        onDismiss={() => setShowErrorSnackbar(false)}
+      />
     </>
   );
 };
-
-export default EditForm;
 
 const styles = StyleSheet.create({
   btnContainer: {
@@ -90,3 +250,5 @@ const styles = StyleSheet.create({
   },
   overlay: {},
 });
+
+export default connect(null, {getAllPatients})(memo(EditForm));

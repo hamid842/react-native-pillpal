@@ -2,9 +2,15 @@ import React, {memo} from 'react';
 import {StyleSheet} from 'react-native';
 import {TextInput} from 'react-native-paper';
 
-import colors from '../config/colors';
-
-const AppTextInput = ({label, right, left, value, onChange, onFocus}) => {
+const AppTextInput = ({
+  label,
+  right,
+  left,
+  value,
+  onChange,
+  onFocus,
+  keyboardType,
+}) => {
   return (
     <TextInput
       theme={{colors: {primary: 'dodgerblue'}}}
@@ -18,6 +24,7 @@ const AppTextInput = ({label, right, left, value, onChange, onFocus}) => {
       onChangeText={onChange}
       outlineColor={'dodgerblue'}
       onFocus={onFocus}
+      keyboardType={keyboardType}
     />
   );
 };
