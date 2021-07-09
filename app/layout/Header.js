@@ -1,11 +1,13 @@
 import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {connect} from 'react-redux';
+import colors from '../config/colors';
 
 import UserInfoMenu from './UserInfoMenu';
 
 const Header = props => {
-  const {navigation, title, account} = props;
+  const {navigation, title, selectedPatientFromTopMenu} = props;
   return (
     <View style={styles.header}>
       <View style={styles.leftButton}>
@@ -14,11 +16,18 @@ const Header = props => {
           onPress={() => {
             navigation.openDrawer();
           }}>
-          <Icon name="menu" size={30} color={'black'} />
+          <Icon name="menu" size={30} color={'white'} />
         </TouchableOpacity>
       </View>
       <View style={styles.title}>
         <Text style={styles.titleText}>{title}</Text>
+        <Text style={styles.titleText}>
+          Patient :
+          <Text
+            style={
+              styles.name
+            }>{`  ${selectedPatientFromTopMenu?.firstName} ${selectedPatientFromTopMenu?.lastName}`}</Text>
+        </Text>
       </View>
       <View style={styles.rightButton}>
         <TouchableOpacity>
@@ -33,7 +42,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 50,
+    height: 60,
     backgroundColor: 'dodgerblue',
   },
   title: {
@@ -43,8 +52,8 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontWeight: 'bold',
-    fontSize: 16,
-    color: 'black',
+    fontSize: 15,
+    color: 'white',
   },
   rightButton: {
     flex: 1,
@@ -55,6 +64,15 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 50,
   },
+  name: {
+    fontWeight: 'normal',
+    color: 'white',
+    fontStyle: 'italic',
+  },
 });
 
-export default Header;
+const mapStateToProps = ({patients}) => ({
+  selectedPatientFromTopMenu: patients.selectedPatientFromTopMenu,
+});
+
+export default connect(mapStateToProps, {})(Header);

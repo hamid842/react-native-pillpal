@@ -16,7 +16,7 @@ const NoPrescription = ({navigation}) => {
           </View>
         </Card.Content>
         <Card.Content style={styles.card}>
-          <Text style={styles.titles}>
+          <Text>
             {' '}
             This patient has no prescription. You can add using button below.
           </Text>

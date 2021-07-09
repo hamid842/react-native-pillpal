@@ -17,13 +17,15 @@ const CurrentMedications = ({navigation, selectedPatientFromTopMenu}) => {
   const [loading, setLoading] = useState(false);
 
   const fetchCurrentMedications = async id => {
-    setLoading(true);
-    const result = await prescriptionsApi.getPatientMedications(id);
-    if (result.ok) {
-      setLoading(false);
-      setPrescriptions(result.data);
-    } else {
-      setLoading(false);
+    if (id) {
+      setLoading(true);
+      const result = await prescriptionsApi.getPatientPrescriptions(id);
+      if (result.ok) {
+        setLoading(false);
+        setPrescriptions(result.data);
+      } else {
+        setLoading(false);
+      }
     }
   };
 
@@ -74,6 +76,7 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: 'bold',
     color: colors.darkBlue,
+    fontStyle: 'italic',
   },
   headerContainer: {
     display: 'flex',

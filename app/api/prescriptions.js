@@ -1,6 +1,6 @@
 import client from './client';
 
-const getPatientMedications = id =>
+const getPatientPrescriptions = id =>
   client.get(`/prescriptions-filter-by-patient-id/${id}`);
 
-export default {getPatientMedications};
+export default {getPatientPrescriptions};

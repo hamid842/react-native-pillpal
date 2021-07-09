@@ -29,6 +29,13 @@ const UserInfoMenu = props => {
     props.getAllPatients(account?.id);
   }, [account?.id]);
 
+  useEffect(() => {
+    if (patients?.length > 0) {
+      const firstId = patients[0].id;
+      handleSelectPatient(firstId);
+    }
+  }, [account?.id]);
+
   const handleSelectPatient = id => {
     props.selectPatientFromTopMenu(id);
     setModalVisible(false);
@@ -39,7 +46,7 @@ const UserInfoMenu = props => {
       <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
         <View style={styles.btn}>
           <Image source={require('../assets/hamid.png')} style={styles.image} />
-          <Icon name="chevron-down" size={25} />
+          <Icon name="chevron-down" size={25} color={'white'} />
         </View>
       </TouchableWithoutFeedback>
       <View style={styles.centeredView}>

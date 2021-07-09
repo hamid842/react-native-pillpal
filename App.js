@@ -45,7 +45,7 @@ const App = () => {
     <StateProvider store={store}>
       <AuthContext.Provider value={{user, setUser}}>
         <OfflineNotice />
-        <StatusBar style="auto" />
+        <StatusBar style="auto" backgroundColor="dodgerblue" />
         <NavigationContainer ref={navigationRef} theme={navigationTheme}>
           {/* <AppNavigator /> */}
           {user ? <AppNavigator /> : <AuthNavigator />}

@@ -1,17 +1,47 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, ScrollView} from 'react-native';
+import {List} from 'react-native-paper';
+import {connect} from 'react-redux';
 
 import Header from '../../layout/Header';
+import NoPatient from './NoPatient';
+import PatientAccordion from './PatientAccordion';
 
-const Prescriptions = ({navigation}) => {
+const Prescriptions = ({navigation, patients}) => {
+  const [expanded, setExpanded] = React.useState(true);
+
+  const handlePress = () => setExpanded(!expanded);
+
   return (
-    <View>
+    <>
       <Header navigation={navigation} title={'Prescriptions'} />
-      <Text>Hello from prescriptions</Text>
-    </View>
+      <ScrollView>
+        <List.Section title="Patients" style={styles.accordion}>
+          {patients && patients.length > 0 ? (
+            patients.map((patient, i) => (
+              <PatientAccordion
+                key={i}
+                patient={patient}
+                navigation={navigation}
+              />
+            ))
+          ) : (
+            <NoPatient navigation={navigation} />
+          )}
+        </List.Section>
+      </ScrollView>
+    </>
   );
 };
 
-export default Prescriptions;
+const styles = StyleSheet.create({
+  accordion: {
+    marginHorizontal: 10,
+  },
+});
 
-const styles = StyleSheet.create({});
+const mapStateToProps = ({patients}) => ({
+  patients: patients.patients,
+});
+
+export default connect(mapStateToProps, {})(Prescriptions);
