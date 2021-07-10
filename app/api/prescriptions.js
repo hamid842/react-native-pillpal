@@ -3,4 +3,6 @@ import client from './client';
 const getPatientPrescriptions = id =>
   client.get(`/prescriptions-filter-by-patient-id/${id}`);
 
-export default {getPatientPrescriptions};
+const createNewPrescription = data => client.post('/prescriptions', data);
+
+export default {getPatientPrescriptions, createNewPrescription};

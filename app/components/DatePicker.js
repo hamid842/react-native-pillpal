@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 import AppTextInput from './AppTextInput';
 
-const DatePicker = ({value, onChange}) => {
+const DatePicker = ({label, value, onChange}) => {
   const [date, setDate] = React.useState(new Date());
   const [open, setOpen] = React.useState(false);
 
@@ -23,7 +23,7 @@ const DatePicker = ({value, onChange}) => {
   return (
     <>
       <AppTextInput
-        label="Birth Date"
+        label={label}
         value={dayjs(date).format('YYYY-MM-DD')}
         onFocus={() => setOpen(true)}
       />

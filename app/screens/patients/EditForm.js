@@ -2,10 +2,10 @@ import React, {memo, useState} from 'react';
 import {connect} from 'react-redux';
 import {StyleSheet, View} from 'react-native';
 import {TextInput} from 'react-native-paper';
-import {Dropdown} from 'react-native-material-dropdown';
 import dayjs from 'dayjs';
 
 import Button from '../../components/AppButton';
+import SelectField from '../../components/SelectField';
 import AppTextInput from '../../components/AppTextInput';
 import DatePicker from '../../components/DatePicker';
 import colors from '../../config/colors';
@@ -123,6 +123,7 @@ const EditForm = props => {
         />
       ) : (
         <DatePicker
+          label="Birth Date"
           value={newPatientInfo.birthDate}
           onChange={date => handleChange(dayjs(date?.date), 'birthDate')}
         />
@@ -149,13 +150,11 @@ const EditForm = props => {
         value={newPatientInfo.phoneNumber2}
         onChange={text => handleChange(text, 'phoneNumber2')}
       />
-      <Dropdown
+      <SelectField
         label="Marital Status"
         value={newPatientInfo.maritalStatus}
         data={maritalStatusOptions}
-        containerStyle={styles.dropdown}
-        overlayStyle={styles.overlay}
-        onChangeText={text => handleChange(text, 'maritalStatus')}
+        onChange={text => handleChange(text, 'maritalStatus')}
       />
       <AppTextInput
         keyboardType="numeric"
@@ -178,12 +177,10 @@ const EditForm = props => {
         right={<TextInput.Affix text="Kg" />}
         onChange={text => handleChange(text, 'weight')}
       />
-      <Dropdown
+      <SelectField
         label="Blood Type"
         value={newPatientInfo.bloodType}
         data={bloodTypeOptions}
-        containerStyle={styles.dropdown}
-        overlayStyle={styles.overlay}
         onChangeText={text => handleChange(text, 'bloodType')}
       />
       <AppTextInput
@@ -231,24 +228,6 @@ const styles = StyleSheet.create({
   btn: {
     width: 100,
   },
-  dropdown: {
-    justifyContent: 'center',
-    height: 40,
-    borderTopWidth: 1,
-    borderBottomColor: 'dodgerblue',
-    borderTopColor: 'dodgerblue',
-    borderRightColor: 'dodgerblue',
-    borderLeftColor: 'dodgerblue',
-    borderRightWidth: 1,
-    borderLeftWidth: 1,
-    borderBottomWidth: 1,
-    marginHorizontal: 10,
-    borderRadius: 5,
-    marginTop: 5,
-    padding: 5,
-    paddingBottom: 20,
-  },
-  overlay: {},
 });
 
 export default connect(null, {getAllPatients})(memo(EditForm));
