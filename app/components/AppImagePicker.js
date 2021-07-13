@@ -1,13 +1,18 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Modal, StyleSheet, View, Alert} from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-import AppButton from '../components/AppButton';
+import AppButton from './AppButton';
 import colors from '../config/colors';
 
-const AppImagePicker = ({label, setImageUri, state}) => {
-  const [modalVisible, setModalVisible] = useState(false);
-
+const AppImagePicker = ({
+  visible,
+  setImageUri,
+  state,
+  onRequestClose,
+  onPressCancel,
+  renderComponent,
+}) => {
   let options = {
     title: 'You can choose one image',
     maxWidth: 256,
@@ -47,18 +52,12 @@ const AppImagePicker = ({label, setImageUri, state}) => {
   };
   return (
     <>
-      <AppButton
-        label={label}
-        color="dodgerblue"
-        icon="upload"
-        onPress={() => setModalVisible(!modalVisible)}
-        style={styles.pickerBtn}
-      />
+      {renderComponent}
       <Modal
         transparent
         animationType="slide"
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(!modalVisible)}>
+        visible={visible}
+        onRequestClose={onRequestClose}>
         <View style={styles.modalView}>
           <AppButton
             label="Camera"
@@ -79,7 +78,7 @@ const AppImagePicker = ({label, setImageUri, state}) => {
             icon="close"
             style={styles.btn}
             color={colors.white}
-            onPress={() => setModalVisible(!modalVisible)}
+            onPress={onPressCancel}
           />
         </View>
       </Modal>
@@ -88,12 +87,6 @@ const AppImagePicker = ({label, setImageUri, state}) => {
 };
 
 const styles = StyleSheet.create({
-  pickerBtn: {
-    backgroundColor: colors.mainGrey,
-    borderRadius: 5,
-    height: 42,
-    borderWidth: 1,
-  },
   modalView: {
     width: '100%',
     height: 200,

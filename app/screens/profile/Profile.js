@@ -12,6 +12,25 @@ const Profile = ({navigation}) => {
   const [editProfile, setEditProfile] = useState(false);
   const [showResetPass, setShowResetPass] = useState(false);
 
+  const handlePressEdit = () => {
+    setShowResetPass(false);
+    setEditProfile(true);
+  };
+
+  const handlePressLock = () => {
+    setEditProfile(false);
+    setShowResetPass(true);
+  };
+
+  const handlePressCancel = () => {
+    setEditProfile(false);
+    setShowResetPass(false);
+  };
+
+  const handlePressSave = () => {
+    console.log('Save');
+  };
+
   return (
     <>
       <Header navigation={navigation} title={'Profile'} />
@@ -19,17 +38,20 @@ const Profile = ({navigation}) => {
         {!editProfile && !showResetPass && (
           <>
             <ProfileTop
-              editProfile={editProfile}
-              setEditProfile={setEditProfile}
-              showResetPass={showResetPass}
-              setShowResetPass={setShowResetPass}
+              onPressLock={handlePressLock}
+              onPressEdit={handlePressEdit}
             />
             <GeneralInfo />
             <Devices />
           </>
         )}
-        {editProfile && <EditProfile />}
-        {showResetPass && <ResetPass />}
+        {editProfile && (
+          <EditProfile
+            onPressCancel={handlePressCancel}
+            onPressSave={handlePressSave}
+          />
+        )}
+        {showResetPass && <ResetPass onPressCancel={handlePressCancel} />}
       </View>
     </>
   );

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 import AppTextInput from '../../components/AppTextInput';
 
-import ImagePicker from '../../components/ImagePicker';
+import AppImagePicker from '../../components/AppImagePicker';
 import SelectField from '../../components/SelectField';
 import CronModal from './CronModal';
+import colors from '../../config/colors';
 
 const MedicineInfo = ({data, handleChange, setImageUri, medicImageUrl}) => {
+  const [modalVisible, setModalVisible] = useState(false);
   const medicTypes = [
     {label: 'OTHER', value: 'OTHER'},
     {label: 'ORAL', value: 'ORAL'},
@@ -30,10 +32,21 @@ const MedicineInfo = ({data, handleChange, setImageUri, medicImageUrl}) => {
         value={data?.usageDescription}
         onChange={text => handleChange(text, 'usageDescription')}
       />
-      <ImagePicker
+      <AppImagePicker
         state="medicImageUrl"
-        label="Upload Medication Image"
         setImageUri={setImageUri}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(!modalVisible)}
+        onPressCancel={() => setModalVisible(!modalVisible)}
+        renderComponent={
+          <AppButton
+            label="Upload Medicine Image"
+            color="dodgerblue"
+            icon="upload"
+            onPress={() => setModalVisible(!modalVisible)}
+            style={styles.pickerBtn}
+          />
+        }
       />
       <CronModal handleChange={handleChange} />
       {medicImageUrl && (
@@ -51,5 +64,11 @@ const styles = StyleSheet.create({
     height: 250,
     borderRadius: 10,
     alignSelf: 'center',
+  },
+  pickerBtn: {
+    backgroundColor: colors.mainGrey,
+    borderRadius: 5,
+    height: 42,
+    borderWidth: 1,
   },
 });

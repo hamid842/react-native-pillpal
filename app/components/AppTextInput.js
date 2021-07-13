@@ -10,9 +10,12 @@ const AppTextInput = ({
   onChange,
   onFocus,
   keyboardType,
+  error,
+  secureTextEntry,
 }) => {
   return (
     <TextInput
+      secureTextEntry={secureTextEntry}
       theme={{colors: {primary: 'dodgerblue'}}}
       mode="outlined"
       style={styles.input}
@@ -25,6 +28,7 @@ const AppTextInput = ({
       outlineColor={'dodgerblue'}
       onFocus={onFocus}
       keyboardType={keyboardType}
+      error={error}
     />
   );
 };

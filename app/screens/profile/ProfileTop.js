@@ -1,25 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AppImagePicker from '../../components/AppImagePicker';
 
 import colors from '../../config/colors';
 
-const ProfileTop = (
-  account,
-  setEditProfile,
-  editProfile,
-  showResetPass,
-  setShowResetPass,
-) => {
-  const handleClickEditProfile = () => {
-    setShowResetPass(false);
-    setEditProfile(!editProfile);
-  };
-
-  const handleClickResetPass = () => {
-    setEditProfile(false);
-    setShowResetPass(!showResetPass);
-  };
+const ProfileTop = props => {
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <>
       <View style={styles.container}>
@@ -32,21 +19,30 @@ const ProfileTop = (
             name="lock"
             size={25}
             color={colors.white}
-            onPress={() => {
-              setEditProfile(false);
-              setShowResetPass(!showResetPass);
-            }}
+            onPress={props.onPressLock && props.onPressLock}
           />
           <Icon
             name="account-edit"
             size={25}
             color={colors.white}
-            onPress={() => {
-              setShowResetPass(false);
-              setEditProfile(!editProfile);
-            }}
+            onPress={props.onPressEdit && props.onPressEdit}
           />
-          <Icon name="camera" size={25} color={colors.white} />
+          <AppImagePicker
+            state="medicImageUrl"
+            // setImageUri={setImageUri}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(!modalVisible)}
+            onPressCancel={() => setModalVisible(!modalVisible)}
+            renderComponent={
+              <Icon
+                name="camera"
+                size={25}
+                color={colors.white}
+                onPress={() => setModalVisible(!modalVisible)}
+              />
+            }
+          />
+          {/* <Icon name="camera" size={25} color={colors.white} /> */}
         </View>
       </View>
     </>
