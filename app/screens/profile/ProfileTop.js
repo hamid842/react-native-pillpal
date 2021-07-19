@@ -29,7 +29,7 @@ const ProfileTop = props => {
           />
           <AppImagePicker
             state="medicImageUrl"
-            // setImageUri={setImageUri}
+            imageSourceType="profile"
             visible={modalVisible}
             onRequestClose={() => setModalVisible(!modalVisible)}
             onPressCancel={() => setModalVisible(!modalVisible)}

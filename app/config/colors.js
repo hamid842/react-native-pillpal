@@ -15,4 +15,6 @@ export default {
   dark: '#0c0c0c',
   danger: '#ff5252',
   bgGrey: '#688ba1',
+  bgGreen: '#1dd1a1',
+  bgDanger: '#ff6b6b',
 };

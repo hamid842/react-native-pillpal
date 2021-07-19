@@ -1,14 +1,34 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, Alert} from 'react-native';
 import {DataTable, Card} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import colors from '../../config/colors';
 import users from '../../api/users';
 
-const Devices = ({account}) => {
+const Devices = ({account, setShowSuccessSnackbar, setShowErrorSnackbar}) => {
   const [devices, setDevices] = useState();
+
+  const deleteDeviceAlert = (name, id) =>
+    Alert.alert('Sure', `want to delete this device ? (${name})`, [
+      {
+        text: 'No',
+        // onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'Yes', onPress: () => handleDeleteDevice(id)},
+    ]);
+
+  const handleDeleteDevice = async id => {
+    const result = await users.deleteDevice(id);
+    if (result.ok) {
+      await setShowSuccessSnackbar(true);
+      await getDevicesList(account?.id);
+    } else {
+      setShowErrorSnackbar(true);
+    }
+  };
 
   const getDevicesList = async id => {
     const result = await users.getDevices(id);
@@ -33,13 +53,18 @@ const Devices = ({account}) => {
           <DataTable.Title></DataTable.Title>
         </DataTable.Header>
         {devices ? (
-          devices.map((device, i) => (
+          devices?.map((device, i) => (
             <DataTable.Row key={i}>
               <DataTable.Cell>{device?.name}</DataTable.Cell>
               <DataTable.Cell>{device?.model}</DataTable.Cell>
               <DataTable.Cell>{device?.serialNo}</DataTable.Cell>
               <DataTable.Cell style={styles.action}>
-                <Icon name="delete-outline" size={20} color={colors.danger} />
+                <Icon
+                  name="delete-outline"
+                  size={30}
+                  color={colors.danger}
+                  onPress={() => deleteDeviceAlert(device?.name, device?.id)}
+                />
               </DataTable.Cell>
             </DataTable.Row>
           ))

@@ -1,5 +1,10 @@
 import React, {memo} from 'react';
-import {StyleSheet} from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {TextInput} from 'react-native-paper';
 
 const AppTextInput = ({
@@ -14,22 +19,26 @@ const AppTextInput = ({
   secureTextEntry,
 }) => {
   return (
-    <TextInput
-      secureTextEntry={secureTextEntry}
-      theme={{colors: {primary: 'dodgerblue'}}}
-      mode="outlined"
-      style={styles.input}
-      label={label}
-      placeholder={label}
-      right={right}
-      left={left}
-      value={value}
-      onChangeText={onChange}
-      outlineColor={'dodgerblue'}
-      onFocus={onFocus}
-      keyboardType={keyboardType}
-      error={error}
-    />
+    <TouchableWithoutFeedback
+      onPress={() => Keyboard.dismiss()}
+      accessible={false}>
+      <TextInput
+        secureTextEntry={secureTextEntry}
+        theme={{colors: {primary: 'dodgerblue'}}}
+        mode="outlined"
+        style={styles.input}
+        label={label}
+        placeholder={label}
+        right={right}
+        left={left}
+        value={value}
+        onChangeText={onChange}
+        outlineColor={'dodgerblue'}
+        onFocus={onFocus}
+        keyboardType={keyboardType}
+        error={error}
+      />
+    </TouchableWithoutFeedback>
   );
 };
 

@@ -1,18 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Modal, StyleSheet, View, Alert} from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 import AppButton from './AppButton';
 import colors from '../config/colors';
+import images from '../api/images';
 
 const AppImagePicker = ({
   visible,
-  setImageUri,
   state,
   onRequestClose,
   onPressCancel,
   renderComponent,
+  imageSourceType,
 }) => {
+  const [imageUri, setImageUri] = useState('');
   let options = {
     title: 'You can choose one image',
     maxWidth: 256,
@@ -33,6 +35,7 @@ const AppImagePicker = ({
       } else {
         let source = response.assets[0];
         setImageUri(source.uri, state);
+        images.uploadImage(source.uri, imageSourceType);
       }
     });
   };
@@ -47,6 +50,7 @@ const AppImagePicker = ({
       } else {
         let source = response.assets[0];
         setImageUri(source.uri, state);
+        images.uploadImage(source.uri, imageSourceType);
       }
     });
   };

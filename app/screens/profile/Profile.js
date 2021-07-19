@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {memo, useState, useEffect} from 'react';
+import {connect} from 'react-redux';
 import {StyleSheet, View} from 'react-native';
 
 import Header from '../../layout/Header';
@@ -7,10 +8,16 @@ import GeneralInfo from './GeneralInfo';
 import ProfileTop from './ProfileTop';
 import EditProfile from './EditProfile';
 import ResetPass from './ResetPass';
+import SuccessSnackbar from '../../components/SuccessSnackbar';
+import ErrorSnackbar from '../../components/ErrorSnackbar';
+import {getUserInfos} from '../../redux/reducers/user-infos/userInfo-reducer';
 
-const Profile = ({navigation}) => {
+const Profile = props => {
+  const {navigation, account} = props;
   const [editProfile, setEditProfile] = useState(false);
   const [showResetPass, setShowResetPass] = useState(false);
+  const [showSuccessSnackbar, setShowSuccessSnackbar] = useState(false);
+  const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
 
   const handlePressEdit = () => {
     setShowResetPass(false);
@@ -31,10 +38,14 @@ const Profile = ({navigation}) => {
     console.log('Save');
   };
 
+  useEffect(() => {
+    props.getUserInfos(account?.id);
+  }, [account?.id]);
+
   return (
     <>
       <Header navigation={navigation} title={'Profile'} />
-      <View>
+      <View style={styles.container}>
         {!editProfile && !showResetPass && (
           <>
             <ProfileTop
@@ -42,21 +53,41 @@ const Profile = ({navigation}) => {
               onPressEdit={handlePressEdit}
             />
             <GeneralInfo />
-            <Devices />
+            <Devices
+              setShowSuccessSnackbar={setShowSuccessSnackbar}
+              setShowErrorSnackbar={setShowErrorSnackbar}
+            />
           </>
         )}
         {editProfile && (
           <EditProfile
             onPressCancel={handlePressCancel}
-            onPressSave={handlePressSave}
+            setEditProfile={setEditProfile}
           />
         )}
         {showResetPass && <ResetPass onPressCancel={handlePressCancel} />}
       </View>
+      <SuccessSnackbar
+        visible={showSuccessSnackbar}
+        message="Device Deleted Successfully."
+        onDismiss={() => setShowSuccessSnackbar(false)}
+      />
+      <ErrorSnackbar
+        visible={showErrorSnackbar}
+        message={'Something went wrong!'}
+        onDismiss={() => setShowErrorSnackbar(false)}
+      />
     </>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
-export default Profile;
+const mapStateToProps = ({login}) => ({
+  account: login.account,
+});
 
-const styles = StyleSheet.create({});
+export default connect(mapStateToProps, {getUserInfos})(memo(Profile));

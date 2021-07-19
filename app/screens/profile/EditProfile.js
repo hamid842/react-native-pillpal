@@ -1,16 +1,21 @@
-import React, {memo, useState, useEffect} from 'react';
+import React, {memo, useState} from 'react';
 import {connect} from 'react-redux';
 import {StyleSheet, Text, View} from 'react-native';
 
 import Button from '../../components/AppButton';
 import AppTextInput from '../../components/AppTextInput';
 import colors from '../../config/colors';
-import {getUserInfos} from '../../redux/reducers/user-infos/userInfo-reducer';
+import SuccessSnackbar from '../../components/SuccessSnackbar';
+import ErrorSnackbar from '../../components/ErrorSnackbar';
+import ActivityIndicator from '../../components/ActivityIndicator';
+import users from '../../api/users';
 
 const EditProfile = props => {
-  const {account, userInfos} = props;
-  console.log('User', userInfos);
+  const {account, userInfos, setEditProfile} = props;
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showSuccessSnackbar, setShowSuccessSnackbar] = useState(false);
+  const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const [editProfileData, setEditProfileData] = useState({
     id: userInfos.id,
     userCode: userInfos.userCode,
@@ -20,12 +25,24 @@ const EditProfile = props => {
     phoneNumber2: userInfos.phoneNumber2,
   });
 
-  useEffect(() => {
-    props.getUserInfos(account?.id);
-  }, [account?.id]);
+  const handleSaveEdition = async () => {
+    setLoading(true);
+    const result = users.editUserInfos(account?.id, editProfileData);
+    console.log('Result', result);
+    if (result.ok) {
+      setLoading(false);
+      setShowSuccessSnackbar(true);
+      setEditProfile(false);
+    } else {
+      setLoading(false);
+      setShowErrorSnackbar(true);
+      setErrorMessage(result?.data?.title);
+    }
+  };
 
   return (
-    <View>
+    <View style={styles.container}>
+      <ActivityIndicator visible={loading} />
       <Text style={styles.title}>Edit Profile</Text>
       <AppTextInput
         label="Address"
@@ -67,16 +84,29 @@ const EditProfile = props => {
         />
         <Button
           label="Save"
-          onPress={props.onPressSave}
+          onPress={handleSaveEdition}
           icon="check"
           color={'green'}
           style={styles.btn}
         />
       </View>
+      <SuccessSnackbar
+        visible={showSuccessSnackbar}
+        message="Updated Successfully."
+        onDismiss={() => setShowSuccessSnackbar(false)}
+      />
+      <ErrorSnackbar
+        visible={showErrorSnackbar}
+        message={errorMessage ? errorMessage : 'Something went wrong!'}
+        onDismiss={() => setShowErrorSnackbar(false)}
+      />
     </View>
   );
 };
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   title: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -92,9 +122,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({login, userInfos}) => ({
+const mapStateToProps = ({userInfos, login}) => ({
   account: login.account,
   userInfos: userInfos.userInfos,
 });
 
-export default connect(mapStateToProps, {getUserInfos})(memo(EditProfile));
+export default connect(mapStateToProps, {})(memo(EditProfile));

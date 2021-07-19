@@ -31,10 +31,10 @@ const UserInfoMenu = props => {
 
   useEffect(() => {
     if (patients?.length > 0) {
-      const firstId = patients[0].id;
+      const firstId = patients[0]?.id;
       handleSelectPatient(firstId);
     }
-  }, [account?.id]);
+  }, [patients[0]?.id]);
 
   const handleSelectPatient = id => {
     props.selectPatientFromTopMenu(id);
