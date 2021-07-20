@@ -1,17 +1,41 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import {connect} from 'react-redux';
 import {StyleSheet, Image, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AppImagePicker from '../../components/AppImagePicker';
 
 import colors from '../../config/colors';
+import images from '../../api/images';
+import AppImagePicker from '../../components/AppImagePicker';
 
 const ProfileTop = props => {
+  // const {profileImage} = props;
   const [modalVisible, setModalVisible] = useState(false);
+  const [imageUri, setImageUri] = useState('');
+  const [image, setImage] = useState('');
+
+  console.log('Profile Image', imageUri);
+  console.log('Image', image);
+
+  // const getImage = async name => {
+  //   name && setImage(await images.downloadImage(name));
+  // };
+
+  useEffect(() => {
+    const getImage = async () => {
+      imageUri && (await images.downloadImage(imageUri, setImage));
+    };
+    getImage();
+  }, [imageUri]);
+
   return (
     <>
       <View style={styles.container}>
         <Image
-          source={require('../../assets/hamid.png')}
+          source={
+            image
+              ? {uri: `data:image/jpg;base64,${image}`}
+              : require('../../assets/hamid.png')
+          }
           style={styles.image}
         />
         <View style={styles.iconContainer}>
@@ -28,9 +52,9 @@ const ProfileTop = props => {
             onPress={props.onPressEdit && props.onPressEdit}
           />
           <AppImagePicker
-            state="medicImageUrl"
             imageSourceType="profile"
             visible={modalVisible}
+            setImageUri={setImageUri}
             onRequestClose={() => setModalVisible(!modalVisible)}
             onPressCancel={() => setModalVisible(!modalVisible)}
             renderComponent={
@@ -42,7 +66,6 @@ const ProfileTop = props => {
               />
             }
           />
-          {/* <Icon name="camera" size={25} color={colors.white} /> */}
         </View>
       </View>
     </>
@@ -72,4 +95,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileTop;
+const mapStateToProps = ({images}) => ({
+  profileImage: images.profileImage,
+});
+
+export default connect(mapStateToProps, {})(ProfileTop);

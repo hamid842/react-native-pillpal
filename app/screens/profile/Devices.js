@@ -21,6 +21,7 @@ const Devices = ({account, setShowSuccessSnackbar, setShowErrorSnackbar}) => {
     ]);
 
   const handleDeleteDevice = async id => {
+    console.log(id);
     const result = await users.deleteDevice(id);
     if (result.ok) {
       await setShowSuccessSnackbar(true);

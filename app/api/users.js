@@ -10,7 +10,7 @@ const getDevices = id =>
 const changePassword = passwords =>
   client.post('account/change-password', passwords);
 
-const deleteDevice = id => client.delete(`/devices/${id}`);
+const deleteDevice = id => client.delete(`/mobile-devices/${id}`);
 
 export default {
   register,

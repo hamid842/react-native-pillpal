@@ -1,20 +1,23 @@
-import React, {useState} from 'react';
+import React, {memo, useState} from 'react';
+import {connect} from 'react-redux';
 import {Modal, StyleSheet, View, Alert} from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 import AppButton from './AppButton';
 import colors from '../config/colors';
 import images from '../api/images';
+import {setImage} from '../redux/reducers/images/images-reducer';
 
-const AppImagePicker = ({
-  visible,
-  state,
-  onRequestClose,
-  onPressCancel,
-  renderComponent,
-  imageSourceType,
-}) => {
-  const [imageUri, setImageUri] = useState('');
+const AppImagePicker = props => {
+  const {
+    visible,
+    onRequestClose,
+    onPressCancel,
+    renderComponent,
+    imageSourceType,
+    setImageUri,
+  } = props;
+  // const [imageUri, setImageUri] = useState('');
   let options = {
     title: 'You can choose one image',
     maxWidth: 256,
@@ -34,8 +37,11 @@ const AppImagePicker = ({
         console.log('User tapped custom button: ', response.customButton);
       } else {
         let source = response.assets[0];
-        setImageUri(source.uri, state);
-        images.uploadImage(source.uri, imageSourceType);
+        // setImageUri(source.uri, state);
+        images.uploadImage(source.uri, imageSourceType, setImageUri);
+
+        // console.log('Take Image', result);
+        // props.setImage(source.uri, imageSourceType);
       }
     });
   };
@@ -50,7 +56,9 @@ const AppImagePicker = ({
       } else {
         let source = response.assets[0];
         setImageUri(source.uri, state);
-        images.uploadImage(source.uri, imageSourceType);
+        const result = images.uploadImage(source.uri, imageSourceType);
+
+        props.setImage(result, imageSourceType);
       }
     });
   };
@@ -105,4 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppImagePicker;
+export default connect(null, {setImage})(memo(AppImagePicker));

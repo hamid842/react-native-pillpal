@@ -34,10 +34,6 @@ const Profile = props => {
     setShowResetPass(false);
   };
 
-  const handlePressSave = () => {
-    console.log('Save');
-  };
-
   useEffect(() => {
     props.getUserInfos(account?.id);
   }, [account?.id]);

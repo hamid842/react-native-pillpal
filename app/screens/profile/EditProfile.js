@@ -28,7 +28,6 @@ const EditProfile = props => {
   const handleSaveEdition = async () => {
     setLoading(true);
     const result = users.editUserInfos(account?.id, editProfileData);
-    console.log('Result', result);
     if (result.ok) {
       setLoading(false);
       setShowSuccessSnackbar(true);
