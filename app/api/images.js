@@ -1,5 +1,6 @@
 import client from './client';
-import axios from 'axios';
+import apisauce from 'apisauce';
+import storage from '../auth/storage';
 
 const uploadImage = (file, imageSourceType, setImageUri) => {
   var photo = {
@@ -18,10 +19,29 @@ const uploadImage = (file, imageSourceType, setImageUri) => {
     .then(res => setImageUri && setImageUri(res.data));
 };
 
+const api = apisauce.create({
+  baseURL: 'http://192.168.1.7:8080/api',
+  responseType: 'blob',
+});
+
+api.addAsyncRequestTransform(async request => {
+  const authToken = await storage.getToken();
+  if (!authToken) {
+    return;
+  } else if (request) {
+    request.headers['Authorization'] = `Bearer ${authToken}`;
+    request.headers['Content-Type'] = 'multipart/form-data';
+  }
+});
 const downloadImage = (name, setImage) => {
-  client
-    .get(`/files/download/${name}`, {responseType: 'blob'})
-    .then(res => setImage && setImage(res));
+  api.get(`/files/download/${name}`).then(res => {
+    const fileReaderInstance = new FileReader();
+    fileReaderInstance.readAsDataURL(res.data);
+    fileReaderInstance.onload = () => {
+      base64data = fileReaderInstance.result;
+      setImage(base64data);
+    };
+  });
 };
 export default {
   uploadImage,

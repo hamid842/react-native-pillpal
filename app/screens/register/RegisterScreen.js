@@ -1,59 +1,74 @@
-import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import * as Yup from "yup";
+import React, {useState} from 'react';
+import {connect} from 'react-redux';
+import {StyleSheet} from 'react-native';
+import * as Yup from 'yup';
 
-import Screen from "../../components/Screen";
-import ErrorMessage from "../../components/ErrorMessage";
-import Form from "../../components/Form";
-import FormField from "../../components/FormField";
-import SubmitButton from "../../components/SubmitButton";
-
-import ActivityIndicator from "../../components/ActivityIndicator";
+import Screen from '../../components/Screen';
+import ErrorMessage from '../../components/ErrorMessage';
+import Form from '../../components/Form';
+import FormField from '../../components/FormField';
+import SubmitButton from '../../components/SubmitButton';
+import usersApi from '../../api/users';
+import useApi from '../../hooks/useApi';
+import useAuth from '../../auth/useAuth';
+import ActivityIndicator from '../../components/ActivityIndicator';
+import {login} from '../../redux/reducers/login/login-reducer';
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required().label("Name"),
-  email: Yup.string().required().email().label("Email"),
-  password: Yup.string().required().min(4).label("Password"),
+  firstName: Yup.string().required().label('First Name'),
+  lastName: Yup.string().required().label('Last Name'),
+  email: Yup.string().required().email().label('Email'),
+  login: Yup.string().required().label('Username'),
+  password: Yup.string().required().min(4).label('Password'),
 });
 
-function RegisterScreen() {
+function RegisterScreen(props) {
+  const registerApi = useApi(usersApi.register);
+  const auth = useAuth();
   const [error, setError] = useState();
 
-  const handleSubmit = async (userInfo) => {
-    console.log("register");
-    // const result = await registerApi.request(userInfo);
+  const handleSubmit = async userInfo => {
+    const result = await registerApi.request(userInfo);
 
-    // if (!result.ok) {
-    //   if (result.data) setError(result.data.error);
-    //   else {
-    //     setError("An unexpected error occurred.");
-    //     console.log(result);
-    //   }
-    //   return;
-    // }
+    if (!result.ok) {
+      if (result.data) setError(result.data.error);
+      else {
+        setError('An unexpected error occurred.');
+        console.log(result);
+      }
+      return;
+    }
 
-    // const { data: authToken } = await loginApi.request(
-    //   userInfo.email,
-    //   userInfo.password
-    // );
-    // auth.logIn(authToken);
+    props.login(userInfo.login, userInfo.password, auth);
   };
 
   return (
     <>
-      <ActivityIndicator />
+      <ActivityIndicator visible={registerApi.loading || props.loading} />
       <Screen style={styles.container}>
         <Form
-          initialValues={{ name: "", email: "", password: "" }}
+          initialValues={{
+            firstName: '',
+            lastName: '',
+            email: '',
+            login: '',
+            password: '',
+            langKey: 'en',
+          }}
           onSubmit={handleSubmit}
-          validationSchema={validationSchema}
-        >
+          validationSchema={validationSchema}>
           <ErrorMessage error={error} visible={error} />
           <FormField
             autoCorrect={false}
             icon="account"
-            name="name"
-            placeholder="Name"
+            name="firstName"
+            placeholder="First Name"
+          />
+          <FormField
+            autoCorrect={false}
+            icon="account"
+            name="lastName"
+            placeholder="Last Name"
           />
           <FormField
             autoCapitalize="none"
@@ -63,6 +78,14 @@ function RegisterScreen() {
             name="email"
             placeholder="Email"
             textContentType="emailAddress"
+          />
+          <FormField
+            autoCapitalize="none"
+            autoCorrect={false}
+            icon="account"
+            keyboardT
+            name="login"
+            placeholder="Username"
           />
           <FormField
             autoCapitalize="none"
@@ -86,4 +109,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterScreen;
+const mapStateToProps = ({login}) => ({
+  errorMessage: login.errorMessage,
+  loading: login.loading,
+});
+
+export default connect(mapStateToProps, {login})(RegisterScreen);

@@ -17,14 +17,14 @@ const EditProfile = props => {
   const [showSuccessSnackbar, setShowSuccessSnackbar] = useState(false);
   const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const [editProfileData, setEditProfileData] = useState({
-    id: userInfos.id,
+    id: account.id,
     userCode: userInfos.userCode,
     user: userInfos.user,
     address: userInfos.address,
     phoneNumber1: userInfos.phoneNumber1,
     phoneNumber2: userInfos.phoneNumber2,
   });
-
+  console.log(account);
   const handleSaveEdition = async () => {
     setLoading(true);
     const result = users.editUserInfos(account?.id, editProfileData);
@@ -59,7 +59,7 @@ const EditProfile = props => {
         onChange={phone =>
           setEditProfileData({
             ...editProfileData,
-            phoneNumber1: '+' + phone,
+            phoneNumber1: phone,
           })
         }
       />
@@ -69,7 +69,7 @@ const EditProfile = props => {
         onChange={phone =>
           setEditProfileData({
             ...editProfileData,
-            phoneNumber2: '+' + phone,
+            phoneNumber2: phone,
           })
         }
       />

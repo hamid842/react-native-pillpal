@@ -55,10 +55,14 @@ const AppImagePicker = props => {
         console.log('User tapped custom button: ', response.customButton);
       } else {
         let source = response.assets[0];
-        setImageUri(source.uri, state);
-        const result = images.uploadImage(source.uri, imageSourceType);
+        // setImageUri(source.uri, state);
+        const result = images.uploadImage(
+          source.uri,
+          imageSourceType,
+          setImageUri,
+        );
 
-        props.setImage(result, imageSourceType);
+        // props.setImage(result, imageSourceType);
       }
     });
   };

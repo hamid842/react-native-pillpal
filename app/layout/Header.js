@@ -23,10 +23,11 @@ const Header = props => {
         <Text style={styles.titleText}>{title}</Text>
         <Text style={styles.titleText}>
           Patient :
-          <Text
-            style={
-              styles.name
-            }>{`  ${selectedPatientFromTopMenu?.firstName} ${selectedPatientFromTopMenu?.lastName}`}</Text>
+          <Text style={styles.name}>
+            {selectedPatientFromTopMenu?.id
+              ? `  ${selectedPatientFromTopMenu?.firstName} ${selectedPatientFromTopMenu?.lastName}`
+              : ''}
+          </Text>
         </Text>
       </View>
       <View style={styles.rightButton}>

@@ -6,8 +6,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../../config/colors';
 import images from '../../api/images';
 import AppImagePicker from '../../components/AppImagePicker';
+import useApi from '../../hooks/useApi';
 
 const ProfileTop = props => {
+  const imageDownloadApi = useApi(images.downloadImage);
   // const {profileImage} = props;
   const [modalVisible, setModalVisible] = useState(false);
   const [imageUri, setImageUri] = useState('');
@@ -22,7 +24,7 @@ const ProfileTop = props => {
 
   useEffect(() => {
     const getImage = async () => {
-      imageUri && (await images.downloadImage(imageUri, setImage));
+      imageUri && (await imageDownloadApi.request(imageUri, setImage));
     };
     getImage();
   }, [imageUri]);
@@ -31,11 +33,7 @@ const ProfileTop = props => {
     <>
       <View style={styles.container}>
         <Image
-          source={
-            image
-              ? {uri: `data:image/jpg;base64,${image}`}
-              : require('../../assets/hamid.png')
-          }
+          source={image ? {uri: image} : require('../../assets/hamid.png')}
           style={styles.image}
         />
         <View style={styles.iconContainer}>

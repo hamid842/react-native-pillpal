@@ -5,6 +5,8 @@
   "main": "dist/index",
   "typings": "dist/index",
   "scripts": {
+    "web:start": "react-scripts start",
+    "web:build": "react-scripts build",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
@@ -35,6 +37,7 @@
     "lottie-react-native": "^4.0.2",
     "moment": "^2.29.1",
     "react": "17.0.1",
+    "react-dom": "^17.0.2",
     "react-native": "0.64.2",
     "react-native-animated-loader": "0.0.9",
     "react-native-barcode-builder": "^2.0.0",
@@ -52,7 +55,9 @@
     "react-native-screens": "^3.4.0",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-vector-icons": "^8.1.0",
+    "react-native-web": "^0.17.1",
     "react-redux": "^7.2.4",
+    "react-scripts": "^4.0.3",
     "redux": "^4.1.0",
     "redux-thunk": "^2.3.0",
     "yup": "^0.32.9"
@@ -69,5 +74,17 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

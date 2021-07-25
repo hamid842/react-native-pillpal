@@ -15,10 +15,11 @@ export default NoPatient;
 
 const styles = StyleSheet.create({
   container: {
-    width: 200,
+    width: 300,
     height: 200,
     backgroundColor: colors.mainGrey,
     borderRadius: 10,
+    alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
   },
