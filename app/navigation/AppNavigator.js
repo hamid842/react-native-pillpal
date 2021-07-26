@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
+import {connect} from 'react-redux';
 import {Image, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {
   createDrawerNavigator,
@@ -6,7 +7,7 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import CurrentMedications from '../screens/current-medications/CurrentMedications';
 import Patients from '../screens/patients/Patients';
@@ -19,22 +20,27 @@ const Drawer = createDrawerNavigator();
 
 const DrawerContent = props => {
   const auth = useAuth();
+
   return (
     <>
       <View style={styles.drawerHeader}>
         <View style={{width: 100, alignSelf: 'center'}}>
           <Image
-            source={require('../assets/hamid.png')}
+            source={
+              props.profileImage
+                ? {uri: props.profileImage}
+                : require('../assets/hamid.png')
+            }
             style={styles.drawerProfilePhoto}
           />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.profileCamera}
             onPress={() => {
               // // Call the toggleCamera passed by DrawerNav
               // props.toggleCamera && props.toggleCamera();
             }}>
             <Icon name="camera" size={40} color="#22222288" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
       <DrawerContentScrollView {...props}>
@@ -46,11 +52,18 @@ const DrawerContent = props => {
   );
 };
 
-const AppNavigator = () => {
+const AppNavigator = props => {
+  const [profileImage, setProfileImage] = useState(props.profileImage);
+
+  useEffect(() => {
+    setProfileImage(props.profileImage);
+  }, [props.profileImage]);
   return (
     <Drawer.Navigator
       initialRouteName="Current-Medications"
-      drawerContent={drawerProps => <DrawerContent {...drawerProps} />}>
+      drawerContent={drawerProps => (
+        <DrawerContent {...drawerProps} profileImage={profileImage} />
+      )}>
       <Drawer.Screen
         name="Current-Medications"
         component={CurrentMedications}
@@ -95,4 +108,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppNavigator;
+const mapStateToProps = ({images}) => ({
+  profileImage: images.profileImage,
+});
+
+export default connect(mapStateToProps, {})(AppNavigator);

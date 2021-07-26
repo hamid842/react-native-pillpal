@@ -3,7 +3,7 @@ import {
   SET_PRESCRIPTION_IMAGE,
   SET_PROFILE_IMAGE,
 } from '../../action-types/action-types';
-import images from '../../../api/images';
+// import images from '../../../api/images';
 
 const initialState = {
   profileImage: '',
@@ -15,19 +15,19 @@ export const setImage = (image, imageSourceType) => dispatch => {
   if (imageSourceType === 'profile') {
     dispatch({
       type: SET_PROFILE_IMAGE,
-      payload: images.uploadImage(image, imageSourceType),
+      payload: image,
     });
   }
   if (imageSourceType === 'prescription') {
     dispatch({
       type: SET_PRESCRIPTION_IMAGE,
-      payload: images.uploadImage(image, imageSourceType),
+      payload: image,
     });
   }
   if (imageSourceType === 'medication') {
     dispatch({
       type: SET_MEDICATION_IMAGE,
-      payload: images.uploadImage(image, imageSourceType),
+      payload: image,
     });
   }
 };

@@ -7,27 +7,21 @@ import colors from '../../config/colors';
 import images from '../../api/images';
 import AppImagePicker from '../../components/AppImagePicker';
 import useApi from '../../hooks/useApi';
+import {setImage} from '../../redux/reducers/images/images-reducer';
 
 const ProfileTop = props => {
   const imageDownloadApi = useApi(images.downloadImage);
-  // const {profileImage} = props;
   const [modalVisible, setModalVisible] = useState(false);
   const [imageUri, setImageUri] = useState('');
   const [image, setImage] = useState('');
-
-  console.log('Profile Image', imageUri);
-  console.log('Image', image);
-
-  // const getImage = async name => {
-  //   name && setImage(await images.downloadImage(name));
-  // };
 
   useEffect(() => {
     const getImage = async () => {
       imageUri && (await imageDownloadApi.request(imageUri, setImage));
     };
     getImage();
-  }, [imageUri]);
+    props.setImage(image, 'profile');
+  }, [imageUri, image]);
 
   return (
     <>
@@ -93,8 +87,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({images}) => ({
+const mapStateToProps = ({images, login}) => ({
+  account: login.account,
   profileImage: images.profileImage,
 });
 
-export default connect(mapStateToProps, {})(ProfileTop);
+export default connect(mapStateToProps, {setImage})(ProfileTop);

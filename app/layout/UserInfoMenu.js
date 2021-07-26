@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {memo, useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {
   StyleSheet,
@@ -24,6 +24,11 @@ const UserInfoMenu = props => {
   const auth = useAuth();
   const {account, patients, navigation} = props;
   const [modalVisible, setModalVisible] = useState(false);
+  const [profileImage, setProfileImage] = useState(props.profileImage);
+
+  useEffect(() => {
+    setProfileImage(props.profileImage);
+  }, [props.profileImage]);
 
   useEffect(() => {
     props.getAllPatients(account?.id);
@@ -45,7 +50,14 @@ const UserInfoMenu = props => {
     <>
       <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
         <View style={styles.btn}>
-          <Image source={require('../assets/hamid.png')} style={styles.image} />
+          <Image
+            source={
+              profileImage
+                ? {uri: profileImage}
+                : require('../assets/hamid.png')
+            }
+            style={styles.image}
+          />
           <Icon name="chevron-down" size={25} color={'white'} />
         </View>
       </TouchableWithoutFeedback>
@@ -122,7 +134,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({login, patients}) => ({
+const mapStateToProps = ({login, patients, images}) => ({
+  profileImage: images.profileImage,
   patients: patients.patients,
   account: login.account,
 });
@@ -130,4 +143,4 @@ const mapStateToProps = ({login, patients}) => ({
 export default connect(mapStateToProps, {
   getAllPatients,
   selectPatientFromTopMenu,
-})(UserInfoMenu);
+})(memo(UserInfoMenu));
