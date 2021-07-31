@@ -42,6 +42,8 @@ const EditForm = props => {
       id: account?.id,
     },
   });
+
+  console.log(newPatientInfo);
   const bloodTypeOptions = [
     {label: 'B+', value: 'B_p'},
     {label: 'A+', value: 'A_p'},
@@ -125,7 +127,6 @@ const EditForm = props => {
           label="Birth Date"
           value={newPatientInfo.birthDate}
           onChange={date => {
-            console.log(data);
             handleChange(dayjs(date?.date).format('YYYY-MM-DD'), 'birthDate');
           }}
         />

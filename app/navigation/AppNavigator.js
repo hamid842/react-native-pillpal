@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {Image, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {
@@ -15,6 +15,8 @@ import Prescriptions from '../screens/prescriptions/Prescriptions';
 import Profile from '../screens/profile/Profile';
 import AddNewPrescription from '../screens/add-new-prescription/AddNewPrescription';
 import useAuth from '../auth/useAuth';
+import RenderImage from '../components/RenderImage';
+import colors from '../config/colors';
 
 const Drawer = createDrawerNavigator();
 
@@ -25,22 +27,11 @@ const DrawerContent = props => {
     <>
       <View style={styles.drawerHeader}>
         <View style={{width: 100, alignSelf: 'center'}}>
-          <Image
-            source={
-              props.profileImage
-                ? {uri: props.profileImage}
-                : require('../assets/hamid.png')
-            }
-            style={styles.drawerProfilePhoto}
+          <RenderImage
+            image={props.profileImage}
+            imageStyle={styles.drawerProfilePhoto}
+            containerStyle={styles.imageContainer}
           />
-          {/* <TouchableOpacity
-            style={styles.profileCamera}
-            onPress={() => {
-              // // Call the toggleCamera passed by DrawerNav
-              // props.toggleCamera && props.toggleCamera();
-            }}>
-            <Icon name="camera" size={40} color="#22222288" />
-          </TouchableOpacity> */}
         </View>
       </View>
       <DrawerContentScrollView {...props}>
@@ -53,11 +44,7 @@ const DrawerContent = props => {
 };
 
 const AppNavigator = props => {
-  const [profileImage, setProfileImage] = useState(props.profileImage);
-
-  useEffect(() => {
-    setProfileImage(props.profileImage);
-  }, [props.profileImage]);
+  const {profileImage} = props;
   return (
     <Drawer.Navigator
       initialRouteName="Current-Medications"
@@ -93,6 +80,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 50,
     backgroundColor: 'white',
+    overflow: 'hidden',
+  },
+  imageContainer: {
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
+    borderRadius: 50,
+    backgroundColor: colors.mediumGrey,
     overflow: 'hidden',
   },
   profileCamera: {

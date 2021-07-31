@@ -16,19 +16,27 @@ import {
   getAllPatients,
   selectPatientFromTopMenu,
 } from '../redux/reducers/patients/patients-reducer';
+import {setImage} from '../redux/reducers/images/images-reducer';
 import PatientListItem from './PatientListItem';
 import useAuth from '../auth/useAuth';
 import NoPatient from './NoPatient';
+import RenderImage from '../components/RenderImage';
+import useApi from '../hooks/useApi';
+import images from '../api/images';
 
 const UserInfoMenu = props => {
   const auth = useAuth();
+  const imageDownloadApi = useApi(images.downloadImage);
   const {account, patients, navigation} = props;
   const [modalVisible, setModalVisible] = useState(false);
-  const [profileImage, setProfileImage] = useState(props.profileImage);
+  // const [profileImage, setProfileImage] = useState('');
 
-  useEffect(() => {
-    setProfileImage(props.profileImage);
-  }, [props.profileImage]);
+  // useEffect(() => {
+  //   if (account?.imageUrl) {
+  //     imageDownloadApi.request(account?.imageUrl, setProfileImage);
+  //     profileImage && props.setImage(profileImage, 'profile');
+  //   }
+  // }, [profileImage]);
 
   useEffect(() => {
     props.getAllPatients(account?.id);
@@ -50,13 +58,10 @@ const UserInfoMenu = props => {
     <>
       <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
         <View style={styles.btn}>
-          <Image
-            source={
-              profileImage
-                ? {uri: profileImage}
-                : require('../assets/hamid.png')
-            }
-            style={styles.image}
+          <RenderImage
+            image={props.profileImage}
+            imageStyle={styles.image}
+            containerStyle={styles.imageContainer}
           />
           <Icon name="chevron-down" size={25} color={'white'} />
         </View>
@@ -113,6 +118,12 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 50,
   },
+  imageContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    backgroundColor: colors.mediumGrey,
+  },
   centeredView: {
     flex: 1,
     justifyContent: 'flex-start',
@@ -141,6 +152,7 @@ const mapStateToProps = ({login, patients, images}) => ({
 });
 
 export default connect(mapStateToProps, {
+  setImage,
   getAllPatients,
   selectPatientFromTopMenu,
 })(memo(UserInfoMenu));

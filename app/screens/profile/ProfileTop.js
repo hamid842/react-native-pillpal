@@ -1,34 +1,54 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
-import {StyleSheet, Image, View} from 'react-native';
+import {StyleSheet, View, Alert, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import colors from '../../config/colors';
 import images from '../../api/images';
 import AppImagePicker from '../../components/AppImagePicker';
 import useApi from '../../hooks/useApi';
+import RenderImage from '../../components/RenderImage';
+import accountInfo from '../../api/accountInfo';
 import {setImage} from '../../redux/reducers/images/images-reducer';
 
 const ProfileTop = props => {
+  const {account} = props;
+  const updateAccountApi = useApi(accountInfo.updateAccountInfo);
   const imageDownloadApi = useApi(images.downloadImage);
   const [modalVisible, setModalVisible] = useState(false);
-  const [imageUri, setImageUri] = useState('');
-  const [image, setImage] = useState('');
+  const [uploadedImageName, setUploadedImageName] = useState('');
+  const [downloadedImage, setDownloadedImage] = useState('');
+
+  const updateAccount = async () => {
+    const result = await updateAccountApi.request({
+      ...account,
+      imageUrl: uploadedImageName,
+    });
+    if (result.ok) {
+      Alert.alert('Image Uploaded.');
+
+      await imageDownloadApi.request(uploadedImageName, setDownloadedImage);
+    } else {
+      Alert.alert('Something went wrong!');
+    }
+  };
 
   useEffect(() => {
-    const getImage = async () => {
-      imageUri && (await imageDownloadApi.request(imageUri, setImage));
-    };
-    getImage();
-    props.setImage(image, 'profile');
-  }, [imageUri, image]);
+    if (uploadedImageName) updateAccount();
+    return () => setUploadedImageName('');
+  }, [uploadedImageName]);
+
+  useEffect(() => {
+    downloadedImage && props.setImage(downloadedImage, 'profile');
+  }, [downloadedImage]);
 
   return (
     <>
       <View style={styles.container}>
-        <Image
-          source={image ? {uri: image} : require('../../assets/hamid.png')}
-          style={styles.image}
+        <RenderImage
+          image={props.profileImage || downloadedImage}
+          imageStyle={styles.image}
+          containerStyle={styles.imageContainer}
         />
         <View style={styles.iconContainer}>
           <Icon
@@ -46,7 +66,7 @@ const ProfileTop = props => {
           <AppImagePicker
             imageSourceType="profile"
             visible={modalVisible}
-            setImageUri={setImageUri}
+            setImageUri={setUploadedImageName}
             onRequestClose={() => setModalVisible(!modalVisible)}
             onPressCancel={() => setModalVisible(!modalVisible)}
             renderComponent={
@@ -85,11 +105,18 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     justifyContent: 'space-around',
   },
+  imageContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 50,
+    marginTop: 15,
+    backgroundColor: colors.mediumGrey,
+  },
 });
 
-const mapStateToProps = ({images, login}) => ({
-  account: login.account,
+const mapStateToProps = ({login, images}) => ({
   profileImage: images.profileImage,
+  account: login.account,
 });
 
 export default connect(mapStateToProps, {setImage})(ProfileTop);

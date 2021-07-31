@@ -12,6 +12,8 @@ const changePassword = passwords =>
 
 const deleteDevice = id => client.delete(`/mobile-devices/${id}`);
 
+const activeAccount = key => client.get(`/activate?key=${key}`);
+
 export default {
   register,
   getUserInfos,
@@ -19,4 +21,5 @@ export default {
   changePassword,
   deleteDevice,
   editUserInfos,
+  activeAccount,
 };

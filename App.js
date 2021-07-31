@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Provider as StateProvider} from 'react-redux';
-import {StatusBar, StyleSheet} from 'react-native';
+import {StatusBar, StyleSheet, LogBox} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import AnimatedLoader from 'react-native-animated-loader';
 
@@ -25,6 +25,10 @@ const App = () => {
       return setIsReady(true);
     }
   };
+
+  useEffect(() => {
+    LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
+  }, []);
 
   useEffect(() => {
     restoreUser();

@@ -31,10 +31,10 @@ function RegisterScreen(props) {
     const result = await registerApi.request(userInfo);
 
     if (!result.ok) {
-      if (result.data) setError(result.data.error);
-      else {
+      if (result.data) {
+        setError(result.data.title);
+      } else {
         setError('An unexpected error occurred.');
-        console.log(result);
       }
       return;
     }
@@ -82,7 +82,7 @@ function RegisterScreen(props) {
           <FormField
             autoCapitalize="none"
             autoCorrect={false}
-            icon="account"
+            icon="account-cog"
             keyboardT
             name="login"
             placeholder="Username"
@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({login}) => ({
-  errorMessage: login.errorMessage,
   loading: login.loading,
 });
 

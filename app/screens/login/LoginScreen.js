@@ -33,7 +33,7 @@ const LoginScreen = props => {
         initialValues={{username: '', password: ''}}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}>
-        <ErrorMessage error={errorMessage} visible={errorMessage} />
+        <ErrorMessage error={errorMessage} visible={errorMessage !== ''} />
         <FormField
           autoCapitalize="none"
           autoCorrect={false}

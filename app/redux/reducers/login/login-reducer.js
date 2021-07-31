@@ -26,19 +26,19 @@ const getLoggedInAccountInfo = async () => {
 export const login = (username, password, auth) => async dispatch => {
   dispatch({type: TOGGLE_LOAD});
   const result = await authApi.login(username, password);
-  auth.logIn(result.data.id_token);
   if (result.ok) {
+    auth.logIn(result.data.id_token);
     dispatch({type: TOGGLE_LOAD});
     dispatch({
       type: GET_ACCOUNT_INFO,
       payload: await getLoggedInAccountInfo(),
     });
   } else {
-    dispatch({type: TOGGLE_LOAD});
     dispatch({
       type: LOGIN_FAILED,
-      payload: result,
+      payload: result.data.detail,
     });
+    dispatch({type: TOGGLE_LOAD});
   }
 };
 export const logout = auth => dispatch => {
@@ -67,7 +67,7 @@ export default (state = initialState, action) => {
     case LOGIN_FAILED: {
       return {
         ...state,
-        errorMessage: action.payload.response?.data?.error?.detail,
+        errorMessage: action.payload,
       };
     }
     case LOGOUT: {

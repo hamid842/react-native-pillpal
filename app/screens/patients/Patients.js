@@ -69,7 +69,7 @@ const Patients = props => {
             setEditMode={setEditMode}
           />
         )}
-        {patients.length == 0 && <NoPatient />}
+        {patients.length === 0 && !addMode && !editMode && <NoPatient />}
       </ScrollView>
       <SuccessSnackbar
         visible={showSuccessSnackbar}

@@ -20,7 +20,7 @@ const uploadImage = (file, imageSourceType, setImageUri) => {
 };
 
 const api = apisauce.create({
-  baseURL: 'http://192.168.1.7:8080/api',
+  baseURL: 'http://192.168.1.3:8080/api',
   responseType: 'blob',
 });
 
