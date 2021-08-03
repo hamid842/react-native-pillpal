@@ -24,7 +24,6 @@ const EditProfile = props => {
     phoneNumber1: userInfos.phoneNumber1,
     phoneNumber2: userInfos.phoneNumber2,
   });
-  console.log(account);
   const handleSaveEdition = async () => {
     setLoading(true);
     const result = users.editUserInfos(account?.id, editProfileData);

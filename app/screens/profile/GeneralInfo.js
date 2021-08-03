@@ -1,24 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import {StyleSheet} from 'react-native';
 import {Card} from 'react-native-paper';
 
-import users from '../../api/users';
 import colors from '../../config/colors';
 import GeneralInfoRow from './GeneralInfoRow';
 
-const GeneralInfo = ({account}) => {
-  const [userInfos, setUserInfos] = useState();
-
-  const getLoggedInUserInfos = async id => {
-    const result = await users.getUserInfos(id);
-    if (result.ok) setUserInfos(result.data);
-    if (!result.ok) return;
-  };
-
-  useEffect(() => {
-    getLoggedInUserInfos(account?.id);
-  }, [account?.id]);
+const GeneralInfo = ({account, userInfos}) => {
   return (
     <Card style={styles.card}>
       <GeneralInfoRow
@@ -85,8 +73,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({login}) => ({
+const mapStateToProps = ({login, userInfos}) => ({
   account: login.account,
+  userInfos: userInfos.userInfos,
 });
 
 export default connect(mapStateToProps, {})(GeneralInfo);

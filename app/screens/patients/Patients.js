@@ -62,8 +62,8 @@ const Patients = props => {
           ))}
         {(addMode || editMode) && (
           <EditForm
-            account={account}
-            selectedPatient={selectedPatient}
+            // account={account}
+            // selectedPatient={selectedPatient}
             editMode={editMode}
             setAddMode={setAddMode}
             setEditMode={setEditMode}

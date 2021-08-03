@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 
 import AppButton from '../../components/AppButton';
@@ -6,15 +6,27 @@ import AppTextInput from '../../components/AppTextInput';
 import AppImagePicker from '../../components/AppImagePicker';
 import SelectField from '../../components/SelectField';
 import CronModal from './CronModal';
+import RenderImage from '../../components/RenderImage';
 import colors from '../../config/colors';
+import useApi from '../../hooks/useApi';
+import images from '../../api/images';
 
 const MedicineInfo = ({data, handleChange, setImageUri, medicImageUrl}) => {
+  const imageDownloadApi = useApi(images.downloadImage);
   const [modalVisible, setModalVisible] = useState(false);
+  const [uploadedImageName, setUploadedImageName] = useState('');
+  const [downloadedImage, setDownloadedImage] = useState('');
   const medicTypes = [
     {label: 'OTHER', value: 'OTHER'},
     {label: 'ORAL', value: 'ORAL'},
     {label: 'INJECTION', value: 'INJECTION'},
   ];
+
+  useEffect(() => {
+    uploadedImageName &&
+      imageDownloadApi.request(uploadedImageName, setDownloadedImage);
+  }, [uploadedImageName]);
+
   return (
     <View>
       <AppTextInput
@@ -34,14 +46,14 @@ const MedicineInfo = ({data, handleChange, setImageUri, medicImageUrl}) => {
         onChange={text => handleChange(text, 'usageDescription')}
       />
       <AppImagePicker
-        state="medicImageUrl"
-        setImageUri={setImageUri}
+        imageSourceType="medication"
         visible={modalVisible}
+        setImageUri={setUploadedImageName}
         onRequestClose={() => setModalVisible(!modalVisible)}
         onPressCancel={() => setModalVisible(!modalVisible)}
         renderComponent={
           <AppButton
-            label="Upload Medicine Image"
+            label="Upload Medication Image"
             color="dodgerblue"
             icon="upload"
             onPress={() => setModalVisible(!modalVisible)}
@@ -50,9 +62,13 @@ const MedicineInfo = ({data, handleChange, setImageUri, medicImageUrl}) => {
         }
       />
       <CronModal handleChange={handleChange} />
-      {medicImageUrl && (
-        <Image source={{uri: medicImageUrl}} style={styles.image} />
-      )}
+      <View style={styles.imgContainer}>
+        <RenderImage
+          image={downloadedImage}
+          imageStyle={styles.image}
+          containerStyle={downloadedImage ? styles.imageContainer : {}}
+        />
+      </View>
     </View>
   );
 };
@@ -71,5 +87,21 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 42,
     borderWidth: 1,
+  },
+  imgContainer: {
+    alignItems: 'center',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginTop: 15,
+  },
+  imageContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginTop: 15,
+    backgroundColor: colors.mediumGrey,
   },
 });

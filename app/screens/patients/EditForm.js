@@ -1,4 +1,4 @@
-import React, {memo, useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {StyleSheet, View} from 'react-native';
 import {TextInput} from 'react-native-paper';
@@ -7,21 +7,30 @@ import dayjs from 'dayjs';
 import Button from '../../components/AppButton';
 import SelectField from '../../components/SelectField';
 import AppTextInput from '../../components/AppTextInput';
+import AppImagePicker from '../../components/AppImagePicker';
+import AppButton from '../../components/AppButton';
 import DatePicker from '../../components/DatePicker';
 import colors from '../../config/colors';
 import patientsApi from '../../api/patients';
 import ActivityIndicator from '../../components/ActivityIndicator';
 import SuccessSnackbar from '../../components/SuccessSnackbar';
 import ErrorSnackbar from '../../components/ErrorSnackbar';
+import useApi from '../../hooks/useApi';
+import images from '../../api/images';
 import {getAllPatients} from '../../redux/reducers/patients/patients-reducer';
+import RenderImage from '../../components/RenderImage';
 
 const EditForm = props => {
+  const imageDownloadApi = useApi(images.downloadImage);
   const {editMode, selectedPatient, setAddMode, setEditMode, account} = props;
+  console.log('selected', selectedPatient);
   const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [uploadedImageName, setUploadedImageName] = useState('');
+  const [downloadedImage, setDownloadedImage] = useState('');
   const [showSuccessSnackbar, setShowSuccessSnackbar] = useState(false);
   const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const [newPatientInfo, setNewPatientInfo] = useState({
-    id: editMode ? selectedPatient?.id : null,
     firstName: editMode ? selectedPatient?.firstName : '',
     lastName: editMode ? selectedPatient?.lastName : '',
     birthDate: editMode
@@ -38,12 +47,12 @@ const EditForm = props => {
     bloodType: editMode ? selectedPatient?.bloodType : '',
     maritalStatus: editMode ? selectedPatient?.maritalStatus : '',
     relationshipWithUser: editMode ? selectedPatient?.relationshipWithUser : '',
+    patientImageUrl: editMode ? selectedPatient?.patientImageUrl : '',
     userInfo: {
       id: account?.id,
     },
   });
 
-  console.log(newPatientInfo);
   const bloodTypeOptions = [
     {label: 'B+', value: 'B_p'},
     {label: 'A+', value: 'A_p'},
@@ -60,6 +69,18 @@ const EditForm = props => {
     {label: 'Single', value: 'SINGLE'},
   ];
 
+  useEffect(() => {
+    setNewPatientInfo({...newPatientInfo, patientImageUrl: uploadedImageName});
+    editMode &&
+      newPatientInfo.patientImageUrl &&
+      imageDownloadApi.request(
+        newPatientInfo.patientImageUrl,
+        setDownloadedImage,
+      );
+    uploadedImageName &&
+      imageDownloadApi.request(uploadedImageName, setDownloadedImage);
+  }, [uploadedImageName, newPatientInfo.patientImageUrl]);
+
   const handlePressCancel = () => {
     setAddMode(false);
     setEditMode(false);
@@ -71,7 +92,7 @@ const EditForm = props => {
   const handleEditPatient = async () => {
     setLoading(true);
     const result = await patientsApi.editPatient(
-      selectedPatient.id,
+      selectedPatient?.id,
       newPatientInfo,
     );
     if (result.ok) {
@@ -93,6 +114,7 @@ const EditForm = props => {
       setAddMode(false);
       props.getAllPatients(account?.id);
     } else {
+      console.log(result);
       setLoading(false);
       setShowErrorSnackbar(true);
     }
@@ -100,7 +122,7 @@ const EditForm = props => {
 
   return (
     <>
-      <ActivityIndicator visible={loading} />
+      <ActivityIndicator visible={loading || imageDownloadApi.loading} />
       <AppTextInput
         label="First Name"
         value={newPatientInfo.firstName}
@@ -184,13 +206,36 @@ const EditForm = props => {
         label="Blood Type"
         value={newPatientInfo.bloodType}
         data={bloodTypeOptions}
-        onChangeText={text => handleChange(text, 'bloodType')}
+        onChange={text => handleChange(text, 'bloodType')}
       />
       <AppTextInput
         label="Relationship"
         value={newPatientInfo.relationshipWithUser}
         onChange={text => handleChange(text, 'relationshipWithUser')}
       />
+      <AppImagePicker
+        imageSourceType="patient"
+        visible={modalVisible}
+        setImageUri={setUploadedImageName}
+        onRequestClose={() => setModalVisible(!modalVisible)}
+        onPressCancel={() => setModalVisible(!modalVisible)}
+        renderComponent={
+          <AppButton
+            label="Upload Patient Image"
+            color="dodgerblue"
+            icon="upload"
+            onPress={() => setModalVisible(!modalVisible)}
+            style={styles.pickerBtn}
+          />
+        }
+      />
+      <View style={styles.imgContainer}>
+        <RenderImage
+          image={downloadedImage}
+          imageStyle={styles.image}
+          containerStyle={downloadedImage ? styles.imageContainer : {}}
+        />
+      </View>
       <View style={styles.btnContainer}>
         <Button
           label="Cancel"
@@ -231,6 +276,38 @@ const styles = StyleSheet.create({
   btn: {
     width: 100,
   },
+  pickerBtn: {
+    backgroundColor: colors.mainGrey,
+    borderRadius: 5,
+    height: 42,
+    borderWidth: 1,
+  },
+  selectedImage: {
+    width: 100,
+    height: 200,
+    borderRadius: 20,
+  },
+  imgContainer: {
+    alignItems: 'center',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginTop: 15,
+  },
+  imageContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginTop: 15,
+    backgroundColor: colors.mediumGrey,
+  },
 });
 
-export default connect(null, {getAllPatients})(memo(EditForm));
+const mapStateToProps = ({login, patients}) => ({
+  account: login.account,
+  selectedPatient: patients.selectedPatient,
+});
+
+export default connect(mapStateToProps, {getAllPatients})(EditForm);

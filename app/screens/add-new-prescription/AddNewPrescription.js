@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {connect} from 'react-redux';
+import {View, StyleSheet, Text} from 'react-native';
 import {ProgressSteps, ProgressStep} from 'react-native-progress-steps';
-import colors from '../../config/colors';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Header from '../../layout/Header';
 import PrescriptionInfo from './PrescriptionInfo';
+import colors from '../../config/colors';
 import MedicineInfo from './MedicineInfo';
 import PharmacyAndRefill from './PharmacyAndRefill';
 import ActivityIndicator from '../../components/ActivityIndicator';
@@ -61,6 +63,23 @@ class AddNewPrescription extends Component {
           title="Add New Prescription"
           navigation={this.props.navigation}
         />
+        <View style={styles.warning}>
+          <View>
+            <Icon name="alert-rhombus-outline" size={40} color="gray" />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>
+              You are adding a new prescription for
+              <Text style={styles.name}>
+                {' '}
+                {this.props.selectedPatientFromTopMenu?.firstName}{' '}
+                {this.props.selectedPatientFromTopMenu?.lastName}.
+              </Text>
+              If you want to add for another patient, please select from top
+              menu.
+            </Text>
+          </View>
+        </View>
         <View style={{flex: 1}}>
           <ProgressSteps
             borderWidth={3}
@@ -130,6 +149,30 @@ const styles = StyleSheet.create({
   nextBtnTextStyle: {
     color: colors.mainBlue,
   },
+  name: {
+    color: colors.mainBlue,
+    fontWeight: 'bold',
+  },
+  text: {
+    color: 'gray',
+  },
+  textContainer: {
+    marginLeft: 10,
+    maxWidth: 300,
+    color: colors.mainGrey,
+  },
+  warning: {
+    backgroundColor: '#f9ca24',
+    margin: 10,
+    padding: 10,
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });
 
-export default AddNewPrescription;
+const mapStateToProps = ({patients}) => ({
+  selectedPatientFromTopMenu: patients.selectedPatientFromTopMenu,
+});
+
+export default connect(mapStateToProps, {})(AddNewPrescription);
