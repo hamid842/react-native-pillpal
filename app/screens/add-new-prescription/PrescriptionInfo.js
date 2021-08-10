@@ -11,15 +11,15 @@ import colors from '../../config/colors';
 import useApi from '../../hooks/useApi';
 import images from '../../api/images';
 
-const PrescriptionInfo = ({data, handleChange}) => {
+const PrescriptionInfo = ({data, handleChange, setImageUri}) => {
   const imageDownloadApi = useApi(images.downloadImage);
   const [modalVisible, setModalVisible] = useState(false);
   const [uploadedImageName, setUploadedImageName] = useState('');
   const [downloadedImage, setDownloadedImage] = useState('');
 
   useEffect(() => {
-    uploadedImageName &&
-      imageDownloadApi.request(uploadedImageName, setDownloadedImage);
+    uploadedImageName && setImageUri(uploadedImageName, 'prescriptionImageUrl');
+    imageDownloadApi.request(uploadedImageName, setDownloadedImage);
   }, [uploadedImageName]);
 
   return (
@@ -51,17 +51,11 @@ const PrescriptionInfo = ({data, handleChange}) => {
         }
       />
       <View style={styles.imgContainer}>
-        <RenderImage
-          image={downloadedImage}
-          imageStyle={styles.image}
-          containerStyle={downloadedImage ? styles.imageContainer : {}}
-        />
+        <RenderImage image={downloadedImage} imageStyle={styles.image} />
       </View>
     </View>
   );
 };
-
-export default PrescriptionInfo;
 
 const styles = StyleSheet.create({
   image: {
@@ -80,16 +74,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 150,
+    height: 200,
+    borderRadius: 10,
     marginTop: 15,
-  },
-  imageContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginTop: 15,
-    backgroundColor: colors.mediumGrey,
   },
 });
+
+export default PrescriptionInfo;

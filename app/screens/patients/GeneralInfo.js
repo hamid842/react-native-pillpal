@@ -3,6 +3,16 @@ import React from 'react';
 import PatientInfo from '../../components/PatientInfo';
 
 const GeneralInfo = ({patient}) => {
+  const formatBloodType = bloodType => {
+    if (bloodType && bloodType?.includes('_p')) {
+      return bloodType?.replace(/_p/, '+');
+    } else if (bloodType && bloodType?.includes('_n')) {
+      return bloodType?.replace(/_n/, '-');
+    } else {
+      return bloodType;
+    }
+  };
+
   return (
     <>
       <PatientInfo title="First Name:" value={patient?.firstName} />
@@ -21,7 +31,10 @@ const GeneralInfo = ({patient}) => {
       <PatientInfo title="Age:" value={patient?.age} />
       <PatientInfo title="Height:" value={patient?.height} />
       <PatientInfo title="Wight:" value={patient?.weight} />
-      <PatientInfo title="Blood Type:" value={patient?.bloodType} />
+      <PatientInfo
+        title="Blood Type:"
+        value={formatBloodType(patient?.bloodType)}
+      />
     </>
   );
 };

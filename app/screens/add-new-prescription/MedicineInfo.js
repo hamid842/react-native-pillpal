@@ -1,75 +1,82 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Image, View} from 'react-native';
+import {StyleSheet, ScrollView} from 'react-native';
 
-import AppButton from '../../components/AppButton';
 import AppTextInput from '../../components/AppTextInput';
-import AppImagePicker from '../../components/AppImagePicker';
 import SelectField from '../../components/SelectField';
 import CronModal from './CronModal';
-import RenderImage from '../../components/RenderImage';
 import colors from '../../config/colors';
 import useApi from '../../hooks/useApi';
-import images from '../../api/images';
+import medicines from '../../api/medicines';
 
-const MedicineInfo = ({data, handleChange, setImageUri, medicImageUrl}) => {
-  const imageDownloadApi = useApi(images.downloadImage);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [uploadedImageName, setUploadedImageName] = useState('');
-  const [downloadedImage, setDownloadedImage] = useState('');
+const MedicineInfo = ({data, handleChange}) => {
+  const medicinesApi = useApi(medicines.getAllMedicines);
+  const [medicinesList, setMedicinesList] = useState([]);
+  const [openType, setOpenType] = useState(false);
+  const [openMedicine, setOpenMedicine] = useState(false);
+  const [medicValue, setMedicValue] = useState(null);
+  const [medicType, setMedicType] = useState(null);
+
   const medicTypes = [
     {label: 'OTHER', value: 'OTHER'},
     {label: 'ORAL', value: 'ORAL'},
     {label: 'INJECTION', value: 'INJECTION'},
   ];
 
+  const getMedicines = async id => {
+    const result = await medicinesApi.request(id);
+    if (result.ok) {
+      setMedicinesList([result.data]);
+    } else {
+      return;
+    }
+  };
+
   useEffect(() => {
-    uploadedImageName &&
-      imageDownloadApi.request(uploadedImageName, setDownloadedImage);
-  }, [uploadedImageName]);
+    getMedicines(1);
+  }, []);
+
+  useEffect(() => {
+    const medicine = medicinesList?.find(
+      medicine => medicine.id === medicValue,
+    );
+    handleChange(medicine, 'medicine');
+  }, [medicValue]);
+
+  useEffect(() => {
+    handleChange(medicType, 'medicType');
+  }, [medicType]);
 
   return (
-    <View>
-      <AppTextInput
-        label="Generic Name"
-        value={data?.genericName}
-        onChange={text => handleChange(text, 'genericName')}
+    <ScrollView nestedScrollEnabled={true}>
+      <SelectField
+        schema={{
+          label: 'brandName',
+          value: 'id',
+        }}
+        searchable={true}
+        open={openMedicine}
+        setOpen={setOpenMedicine}
+        data={medicinesList}
+        value={medicValue}
+        setValue={setMedicValue}
+        placeholder="Select or Search Medicine"
       />
       <SelectField
-        label="Type"
+        open={openType}
+        setOpen={setOpenType}
         data={medicTypes}
-        value={data?.medicType}
-        onChange={text => handleChange(text, 'medicType')}
+        value={medicType}
+        setValue={setMedicType}
+        placeholder="Medicine Type"
       />
       <AppTextInput
         label="Usage Description"
         value={data?.usageDescription}
         onChange={text => handleChange(text, 'usageDescription')}
       />
-      <AppImagePicker
-        imageSourceType="medication"
-        visible={modalVisible}
-        setImageUri={setUploadedImageName}
-        onRequestClose={() => setModalVisible(!modalVisible)}
-        onPressCancel={() => setModalVisible(!modalVisible)}
-        renderComponent={
-          <AppButton
-            label="Upload Medication Image"
-            color="dodgerblue"
-            icon="upload"
-            onPress={() => setModalVisible(!modalVisible)}
-            style={styles.pickerBtn}
-          />
-        }
-      />
+
       <CronModal handleChange={handleChange} />
-      <View style={styles.imgContainer}>
-        <RenderImage
-          image={downloadedImage}
-          imageStyle={styles.image}
-          containerStyle={downloadedImage ? styles.imageContainer : {}}
-        />
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -103,5 +110,22 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginTop: 15,
     backgroundColor: colors.mediumGrey,
+  },
+  dropdown: {
+    height: 40,
+    marginHorizontal: 10,
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: 'dodgerblue',
+    borderRadius: 5,
+  },
+  itemStyle: {
+    padding: 5,
+    marginTop: 2,
+    backgroundColor: colors.mediumGrey,
+    borderColor: colors.mediumGrey,
+    borderWidth: 1,
+    borderRadius: 5,
+    marginHorizontal: 5,
   },
 });

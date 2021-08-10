@@ -1,36 +1,58 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Dropdown} from 'react-native-material-dropdown';
+import DropDownPicker from 'react-native-dropdown-picker';
+import colors from '../config/colors';
 
-const SelectField = ({label, data, onChange, value}) => {
+const SelectField = ({
+  schema,
+  open,
+  data,
+  value,
+  setOpen,
+  setValue,
+  setItems,
+  searchable,
+  loading,
+  placeholder,
+  onChangeSearchText,
+  onChangeValue,
+}) => {
   return (
-    <Dropdown
-      label={label}
+    <DropDownPicker
+      schema={schema}
+      open={open}
       value={value}
-      data={data}
-      containerStyle={styles.dropdown}
-      onChangeText={onChange}
+      items={data}
+      setOpen={setOpen}
+      setValue={setValue}
+      setItems={setItems}
+      onChangeSearchText={onChangeSearchText && onChangeSearchText}
+      onChangeValue={onChangeSearchText && onChangeValue}
+      searchable={searchable}
+      loading={loading}
+      placeholder={placeholder}
+      style={styles.dropdown}
+      dropDownContainerStyle={styles.dropDownContainerStyle}
     />
   );
 };
 
 const styles = StyleSheet.create({
   dropdown: {
-    justifyContent: 'center',
-    height: 40,
-    borderTopWidth: 1,
-    borderBottomColor: 'dodgerblue',
-    borderTopColor: 'dodgerblue',
-    borderRightColor: 'dodgerblue',
-    borderLeftColor: 'dodgerblue',
-    borderRightWidth: 1,
-    borderLeftWidth: 1,
-    borderBottomWidth: 1,
+    height: 42,
+    width: '95%',
+    borderColor: 'dodgerblue',
     marginHorizontal: 10,
     borderRadius: 5,
     marginTop: 5,
-    padding: 5,
-    paddingBottom: 20,
+    backgroundColor: colors.mainGrey,
+  },
+  dropDownContainerStyle: {
+    marginHorizontal: 15,
+    width: '92%',
+    borderWidth: 0,
+    backgroundColor: colors.mediumGrey,
+    zIndex: 99999,
   },
 });
 

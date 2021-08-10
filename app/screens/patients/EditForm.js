@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import dayjs from 'dayjs';
 
@@ -23,14 +23,17 @@ import RenderImage from '../../components/RenderImage';
 const EditForm = props => {
   const imageDownloadApi = useApi(images.downloadImage);
   const {editMode, selectedPatient, setAddMode, setEditMode, account} = props;
-  console.log('selected', selectedPatient);
+
   const [loading, setLoading] = useState(false);
+  const [openMarital, setOpenMarital] = useState(false);
+  const [openBlood, setOpenBlood] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [uploadedImageName, setUploadedImageName] = useState('');
   const [downloadedImage, setDownloadedImage] = useState('');
   const [showSuccessSnackbar, setShowSuccessSnackbar] = useState(false);
   const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const [newPatientInfo, setNewPatientInfo] = useState({
+    id: editMode ? selectedPatient?.id : '',
     firstName: editMode ? selectedPatient?.firstName : '',
     lastName: editMode ? selectedPatient?.lastName : '',
     birthDate: editMode
@@ -52,6 +55,12 @@ const EditForm = props => {
       id: account?.id,
     },
   });
+  const [maritalValue, setMaritalValue] = useState(
+    newPatientInfo.maritalStatus,
+  );
+  const [bloodTypeValue, setBloodTypeValue] = useState(
+    newPatientInfo.bloodType,
+  );
 
   const bloodTypeOptions = [
     {label: 'B+', value: 'B_p'},
@@ -89,6 +98,15 @@ const EditForm = props => {
   const handleChange = (text, name) => {
     setNewPatientInfo({...newPatientInfo, [name]: text});
   };
+
+  useEffect(() => {
+    handleChange(maritalValue, 'maritalStatus');
+  }, [maritalValue]);
+
+  useEffect(() => {
+    handleChange(bloodTypeValue, 'bloodType');
+  }, [bloodTypeValue]);
+
   const handleEditPatient = async () => {
     setLoading(true);
     const result = await patientsApi.editPatient(
@@ -121,7 +139,7 @@ const EditForm = props => {
   };
 
   return (
-    <>
+    <ScrollView>
       <ActivityIndicator visible={loading || imageDownloadApi.loading} />
       <AppTextInput
         label="First Name"
@@ -163,6 +181,14 @@ const EditForm = props => {
         value={newPatientInfo.email}
         onChange={text => handleChange(text, 'email')}
       />
+      <SelectField
+        open={openMarital}
+        setOpen={setOpenMarital}
+        data={maritalStatusOptions}
+        placeholder="Marital Status"
+        value={maritalValue}
+        setValue={setMaritalValue}
+      />
       <AppTextInput
         keyboardType="numeric"
         label="Phone Number"
@@ -175,12 +201,7 @@ const EditForm = props => {
         value={newPatientInfo.phoneNumber2}
         onChange={text => handleChange(text, 'phoneNumber2')}
       />
-      <SelectField
-        label="Marital Status"
-        value={newPatientInfo.maritalStatus}
-        data={maritalStatusOptions}
-        onChange={text => handleChange(text, 'maritalStatus')}
-      />
+
       <AppTextInput
         keyboardType="numeric"
         label="Age"
@@ -203,10 +224,12 @@ const EditForm = props => {
         onChange={text => handleChange(text, 'weight')}
       />
       <SelectField
-        label="Blood Type"
-        value={newPatientInfo.bloodType}
+        open={openBlood}
+        setOpen={setOpenBlood}
+        placeholder="Blood Type"
+        value={bloodTypeValue}
         data={bloodTypeOptions}
-        onChange={text => handleChange(text, 'bloodType')}
+        setValue={setBloodTypeValue}
       />
       <AppTextInput
         label="Relationship"
@@ -262,7 +285,7 @@ const EditForm = props => {
         message="Something went wrong!"
         onDismiss={() => setShowErrorSnackbar(false)}
       />
-    </>
+    </ScrollView>
   );
 };
 

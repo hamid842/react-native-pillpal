@@ -7,8 +7,14 @@ import ActivityIndicator from '../../components/ActivityIndicator';
 import PrescriptionStatus from './PrescriptionStatus';
 import PrescriptionItem from './PrescriptionItem';
 import NoPrescription from './NoPrescription';
+import RenderImage from '../../components/RenderImage';
+import colors from '../../config/colors';
+import useApi from '../../hooks/useApi';
+import images from '../../api/images';
 
 const PatientAccordion = ({navigation, patient}) => {
+  const imagesApi = useApi(images.downloadImage);
+  const [downloadedImage, setDownloadedImage] = useState();
   const [prescriptions, setPrescriptions] = useState([]);
   const [prescriptionStatus, setPrescriptionStatus] = useState('ACTIVE');
   const [loading, setLoading] = useState(false);
@@ -27,6 +33,12 @@ const PatientAccordion = ({navigation, patient}) => {
   useEffect(() => {
     patient && fetchPatientPrescriptions(patient?.id);
   }, [patient]);
+
+  useEffect(() => {
+    patient?.patientImageUrl &&
+      imagesApi.request(patient?.patientImageUrl, setDownloadedImage);
+  }, [patient?.patientImageUrl]);
+
   return (
     <>
       <ActivityIndicator visible={loading} />
@@ -34,10 +46,10 @@ const PatientAccordion = ({navigation, patient}) => {
         title={`${patient?.firstName} ${patient?.lastName}`}
         description={`Age:${patient?.age}`}
         left={props => (
-          <Avatar.Image
-            {...props}
-            size={40}
-            source={require('../../assets/hamid.png')}
+          <RenderImage
+            image={downloadedImage}
+            imageStyle={styles.image}
+            containerStyle={styles.imageContainer}
           />
         )}
         style={styles.items}>
@@ -60,6 +72,17 @@ const PatientAccordion = ({navigation, patient}) => {
 const styles = StyleSheet.create({
   items: {
     borderRadius: 10,
+  },
+  image: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+  },
+  imageContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    backgroundColor: colors.mediumGrey,
   },
 });
 

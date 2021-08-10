@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {View, StyleSheet, Text} from 'react-native';
+import {ScrollView, View, StyleSheet, Text} from 'react-native';
 import {ProgressSteps, ProgressStep} from 'react-native-progress-steps';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -24,18 +24,17 @@ class AddNewPrescription extends Component {
     issueDate: new Date(),
     barCode: '',
     prescriptionImageUrl: null,
-    medicImageUrl: null,
-    genericName: '',
+    medicine: {},
     medicType: '',
     usageDescription: '',
     cron: '',
-    pharmacy: '',
-    refillTime: new Date(),
+    pharmacy: {},
     loading: false,
+    refillTime: new Date(),
+    patientInfo: this.props.selectedPatientFromTopMenu,
   };
 
   handleChange = (text, name) => {
-    console.log(this.state);
     this.setState({...this.state, [name]: text});
   };
 
@@ -80,7 +79,7 @@ class AddNewPrescription extends Component {
             </Text>
           </View>
         </View>
-        <View style={{flex: 1}}>
+        <ScrollView style={{flex: 1}} nestedScrollEnabled={true}>
           <ProgressSteps
             borderWidth={3}
             activeStepIconBorderColor={colors.mainBlue}
@@ -132,7 +131,7 @@ class AddNewPrescription extends Component {
               />
             </ProgressStep>
           </ProgressSteps>
-        </View>
+        </ScrollView>
       </>
     );
   }
