@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, ScrollView} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import AppTextInput from '../../components/AppTextInput';
 import SelectField from '../../components/SelectField';
@@ -47,7 +47,7 @@ const MedicineInfo = ({data, handleChange}) => {
   }, [medicType]);
 
   return (
-    <ScrollView nestedScrollEnabled={true}>
+    <View>
       <SelectField
         schema={{
           label: 'brandName',
@@ -76,7 +76,8 @@ const MedicineInfo = ({data, handleChange}) => {
       />
 
       <CronModal handleChange={handleChange} />
-    </ScrollView>
+      <View style={{height: 240}}></View>
+    </View>
   );
 };
 

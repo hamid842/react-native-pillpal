@@ -21,7 +21,7 @@ const uploadImage = (file, imageSourceType, setImageUri) => {
 
 const api = apisauce.create({
   // baseURL: 'https://mjv-703-demo-service-iii.herokuapp.com/api',
-  baseURL: 'http://192.168.1.3:8080/api',
+  baseURL: 'http://192.168.1.4:8080/api',
   responseType: 'blob',
 });
 

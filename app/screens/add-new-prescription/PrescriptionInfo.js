@@ -60,7 +60,7 @@ const PrescriptionInfo = ({data, handleChange, setImageUri}) => {
 const styles = StyleSheet.create({
   image: {
     width: 200,
-    height: 250,
+    height: 270,
     borderRadius: 10,
     alignSelf: 'center',
   },

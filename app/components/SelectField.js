@@ -33,6 +33,7 @@ const SelectField = ({
       placeholder={placeholder}
       style={styles.dropdown}
       dropDownContainerStyle={styles.dropDownContainerStyle}
+      dropDownDirection="AUTO"
     />
   );
 };

@@ -5,9 +5,11 @@ import dayjs from 'dayjs';
 import PrescriptionDetails from './PrescriptionDetails';
 
 const PrescriptionItem = ({prescription}) => {
+  console.log(prescription);
   return (
     <List.Accordion
-      title={`${prescription?.prescriptionCode}`}
+      //! TODO Check this line
+      title={`${prescription?.medicine?.brandName}`}
       description={`Promised:${dayjs(prescription?.issueDate).format(
         'YYYY-MM-DD',
       )}`}

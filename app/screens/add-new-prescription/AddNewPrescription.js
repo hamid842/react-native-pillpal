@@ -22,7 +22,10 @@ class AddNewPrescription extends Component {
 
   state = {
     issueDate: new Date(),
+    hasRefill: false,
+    importantInfo: '',
     barCode: '',
+    qty: '1',
     prescriptionImageUrl: null,
     medicine: {},
     medicType: '',
@@ -32,6 +35,7 @@ class AddNewPrescription extends Component {
     loading: false,
     refillTime: new Date(),
     patientInfo: this.props.selectedPatientFromTopMenu,
+    status: 'ACTIVE',
   };
 
   handleChange = (text, name) => {
@@ -142,7 +146,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.mainBlue,
     borderRadius: 25,
-    width: 80,
+    width: 90,
     alignItems: 'center',
   },
   nextBtnTextStyle: {

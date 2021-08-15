@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {ScrollView} from 'react-native';
+import {View} from 'react-native';
 import dayjs from 'dayjs';
 
 import DatePicker from '../../components/DatePicker';
 import SelectField from '../../components/SelectField';
 import useApi from '../../hooks/useApi';
 import pharmacies from '../../api/pharmacies';
+import AppTextInput from '../../components/AppTextInput';
 
 const PharmacyAndRefill = ({data, handleChange}) => {
   const pharmaciesApi = useApi(pharmacies.getAllPharmacies);
@@ -26,8 +27,15 @@ const PharmacyAndRefill = ({data, handleChange}) => {
     getPharmacies();
   }, []);
 
+  useEffect(() => {
+    const pharmacy = pharmaciesList?.find(
+      pharmacy => pharmacy.id === pharmacyValue,
+    );
+    handleChange(pharmacy, 'pharmacy');
+  }, [pharmacyValue]);
+
   return (
-    <ScrollView>
+    <View>
       <SelectField
         schema={{
           label: 'name',
@@ -46,7 +54,13 @@ const PharmacyAndRefill = ({data, handleChange}) => {
         value={data?.refillTime}
         onChange={date => handleChange(dayjs(date?.date), 'refillTime')}
       />
-    </ScrollView>
+      <AppTextInput
+        label="Quantity"
+        value={data?.qty}
+        onChange={text => handleChange(text, 'qty')}
+      />
+      <View style={{height: 300}}></View>
+    </View>
   );
 };
 
