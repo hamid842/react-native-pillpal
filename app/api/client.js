@@ -5,8 +5,8 @@ import authStorage from '../auth/storage';
 // import settings from "../config/settings";
 
 const apiClient = create({
-  // baseURL: 'https://mjv-703-demo-service-iii.herokuapp.com/api',
-  baseURL: 'http://192.168.1.4:8080/api',
+  baseURL: 'https://mjv-703-demo-service-iii.herokuapp.com/api',
+  // baseURL: 'http://192.168.1.4:8080/api',
 });
 
 apiClient.addAsyncRequestTransform(async request => {
