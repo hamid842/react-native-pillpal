@@ -1,5 +1,5 @@
 import client from './client';
 
-const getMedicationSideEffect = id => client.get(`/side-effects/${id}`);
+const getMedicineInfo = id => client.get(`/medicines/${id}`);
 
-export default {getMedicationSideEffect};
+export default {getMedicineInfo};
